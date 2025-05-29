@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard tổ chức</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand organization" href="dashboard-organization.html">Organization</a>
+        <div class="collapse navbar-collapse" id="orgNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="dashboard-organization.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="manage-events.html">Quản lý sự kiện</a></li>
+                <li class="nav-item"><a class="nav-link" href="approve-registrations.html">Duyệt đăng ký</a></li>
+                <li class="nav-item"><a class="nav-link" href="stats-organization.html">Thống kê</a></li>
+                <li class="nav-item"><a class="nav-link" href="notifications-organization.html">Thông báo</a></li>
+                <li class="nav-item"><a class="nav-link" href="org-profile.html">Hồ sơ</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="home-image">
+    <img src="images/home.jpg" alt="Banner" class="img-fluid w-100 h-100">
+    <div class="overlay"></div>
+</div>
+
+<div class="container my-4">
+    <h2 class="text-center mb-4">Sự kiện sắp tới</h2>
+    <div id="orgEventCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" id="orgCarouselInner"></div>
+        <button class="carousel-control-prev" data-bs-target="#orgEventCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" data-bs-target="#orgEventCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (async()=>{
+        const orgId = 1;
+        const evs = await fetch(`/events?organizationId=${orgId}&status=PLANNED`).then(r=>r.json());
+        const inner = document.getElementById('orgCarouselInner');
+        evs.forEach((e,i)=>{
+            const item = document.createElement('div');
+            item.className = 'carousel-item'+(i===0?' active':'');
+            item.innerHTML = `
+      <div class="card">
+        <img src="${e.bannerUrl||''}" class="card-img-top" alt="${e.title}">
+        <div class="card-body">
+          <h5>${e.title}</h5>
+          <a href="org-event-detail.html?id=${e.id}" class="btn btn-primary">Chi tiết</a>
+        </div>
+      </div>`;
+            inner.appendChild(item);
+        });
+    })();
+</script>
+</body>
+</html>

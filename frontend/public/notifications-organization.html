@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông báo Org</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand organization" href="dashboard-organization.html">Organization</a>
+        <div class="collapse navbar-collapse" id="orgNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="dashboard-organization.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="manage-events.html">Quản lý sự kiện</a></li>
+                <li class="nav-item"><a class="nav-link" href="approve-registrations.html">Duyệt đăng ký</a></li>
+                <li class="nav-item"><a class="nav-link" href="stats-organization.html">Thống kê</a></li>
+                <li class="nav-item"><a class="nav-link" href="notifications-organization.html">Thông báo</a></li>
+                <li class="nav-item"><a class="nav-link" href="org-profile.html">Hồ sơ</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">Thông báo</h2>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <button class="nav-link active btn-nhan" data-bs-toggle="tab" data-bs-target="#received">Nhận</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn-gui" data-bs-toggle="tab" data-bs-target="#send">Gửi</button>
+        </li>
+    </ul>
+    <div class="tab-content p-3 border">
+        <div id="received" class="tab-pane fade show active">
+            <div id="notifRec"></div>
+        </div>
+        <div id="send" class="tab-pane fade">
+            <form id="notifForm">
+                <div class="mb-3">
+                    <input type="radio" name="target" value="event" checked> Gửi đến người tham gia sự kiện
+                    <select id="eventSelect" class="form-select"></select>
+                </div>
+                <div class="mb-3">
+                    <input type="radio" name="target" value="user"> Gửi đến 1 người
+                    <select id="userSelect" class="form-select"></select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nội dung</label>
+                    <textarea class="form-control" name="content" rows="2" required></textarea>
+                </div>
+                <button class="btn btn-primary">Gửi</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (async()=>{
+        // const orgId = 1;
+        // // Lấy accountId của tổ chức
+        // const org = await fetch(`/organizations/${orgId}`).then(r=>r.json());
+        // const orgAccId = org.accountId;
+
+        // đang giả sử
+        const orgId    = 1;  // organizations.id
+        const orgAccId = 3;  // organizations.accountId
+        const adminAcc = 5;  // accountId của admin/hệ thống
+
+        // --- Nhận thông báo ---
+        const recDiv = document.getElementById('notifRec');
+        const recNotifs = await fetch(`/notifications?recipientId=${orgAccId}`).then(r=>r.json());
+        if(recNotifs.length === 0) {
+            recDiv.innerHTML = '<p>Chưa có thông báo.</p>';
+        } else {
+            recNotifs.forEach(n => {
+                const a = document.createElement('div');
+                a.className = `alert ${n.status==='UNREAD'?'alert-warning':'alert-success'}`;
+                a.innerHTML = n.content;
+                a.onclick = async () => {
+                    if(n.status === 'UNREAD') {
+                        await fetch(`/notifications/${n.id}`, {
+                            method:'PATCH',
+                            headers:{'Content-Type':'application/json'},
+                            body: JSON.stringify({status:'READ'})
+                        });
+                        a.classList.replace('alert-warning','alert-success');
+                    }
+                };
+                recDiv.appendChild(a);
+            });
+        }
+
+        // --- Chuẩn bị selects ---
+        const evs = await fetch(`/events?organizationId=${orgId}`).then(r=>r.json());
+        evs.forEach(e => {
+            document.getElementById('eventSelect')
+                .insertAdjacentHTML('beforeend', `<option value="${e.id}">${e.title}</option>`);
+        });
+        const vols = await fetch('/volunteers').then(r=>r.json());
+        vols.forEach(v => {
+            document.getElementById('userSelect')
+                .insertAdjacentHTML('beforeend', `<option value="${v.id}">${v.fullName}</option>`);
+        });
+
+        // --- Gửi thông báo ---
+        document.getElementById('notifForm').onsubmit = async e => {
+            e.preventDefault();
+            const fm = new FormData(e.target);
+            const now = new Date().toISOString();
+            let recipients = [];
+
+            if(fm.get('target') === 'event') {
+                // lấy registrations đã CONFIRMED cho event
+                const regs = await fetch(
+                    `/registrations?eventId=${fm.get('eventSelect')}&status=CONFIRMED`
+                ).then(r=>r.json());
+                // map volunteerId → accountId
+                const accMap = Object.fromEntries(vols.map(v=>[v.id,v.accountId]));
+                recipients = regs.map(r=>accMap[r.volunteerId]);
+            } else {
+                const selVolId = parseInt(fm.get('userSelect'));
+                const accMap = Object.fromEntries(vols.map(v=>[v.id,v.accountId]));
+                recipients = [ accMap[selVolId] ];
+            }
+
+            const title = fm.get('target')==='event'
+                ? evs.find(e=>e.id==fm.get('eventSelect')).title
+                : 'Thông báo từ tổ chức';
+
+            for(const recId of recipients) {
+                await fetch('/notifications', {
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({
+                        recipientId: recId,
+                        senderId:    orgAccId,
+                        title,
+                        content: fm.get('content'),
+                        type: 'SYSTEM',
+                        status: 'UNREAD',
+                        createdDate: now
+                    })
+                });
+            }
+            alert('Gửi thông báo thành công!');
+        };
+    })();
+</script>
+</body>
+</html>

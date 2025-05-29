@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý sự kiện</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand organization" href="dashboard-organization.html">Organization</a>
+        <div class="collapse navbar-collapse" id="orgNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="dashboard-organization.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="manage-events.html">Quản lý sự kiện</a></li>
+                <li class="nav-item"><a class="nav-link" href="approve-registrations.html">Duyệt đăng ký</a></li>
+                <li class="nav-item"><a class="nav-link" href="stats-organization.html">Thống kê</a></li>
+                <li class="nav-item"><a class="nav-link" href="notifications-organization.html">Thông báo</a></li>
+                <li class="nav-item"><a class="nav-link" href="org-profile.html">Hồ sơ</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Quản lý sự kiện</h2>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal"
+                onclick="openCreateModal()">Tạo mới</button>
+    </div>
+    <table class="table">
+        <thead><tr><th>ID</th><th>Tiêu đề</th><th>Hành động</th></tr></thead>
+        <tbody id="eventsTable"></tbody>
+    </table>
+</div>
+
+<!-- Modal Tạo/Sửa -->
+<div class="modal fade" id="eventModal">
+    <div class="modal-dialog">
+        <form id="eventForm" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Tạo sự kiện</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="id" id="eventId">
+                <!-- không cần hidden organizationId nữa -->
+                <div class="mb-3"><label>Tiêu đề</label><input class="form-control" name="title" required></div>
+                <div class="mb-3"><label>Mô tả</label><textarea class="form-control" name="description" rows="3" required></textarea></div>
+                <div class="row">
+                    <div class="col mb-3"><label>Bắt đầu</label><input type="datetime-local" class="form-control" name="startTime" required></div>
+                    <div class="col mb-3"><label>Kết thúc</label><input type="datetime-local" class="form-control" name="endTime" required></div>
+                </div>
+                <div class="mb-3"><label>Địa điểm</label><input class="form-control" name="location"></div>
+                <div class="mb-3"><label>Kỹ năng</label><input class="form-control" name="requiredSkills" placeholder="phân cách bằng dấu phẩy"></div>
+                <div class="mb-3"><label>Số tối đa</label><input type="number" class="form-control" name="maxParticipants"></div>
+                <div class="mb-3"><label>Trạng thái</label>
+                    <select class="form-select" name="status">
+                        <option>PLANNED</option><option>ONGOING</option>
+                        <option>COMPLETED</option><option>CANCELLED</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success">Lưu</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const orgId     = 1;  // id của organizations
+    const orgAccId  = 3;  // accountId của tổ chức
+    const adminAcc  = 5;  // accountId của Admin (hệ thống)
+
+    function openCreateModal(){
+        document.getElementById('modalTitle').textContent = 'Tạo sự kiện mới';
+        document.getElementById('eventForm').reset();
+        document.getElementById('eventId').value = '';
+    }
+
+    document.getElementById('eventForm').onsubmit = async e => {
+        e.preventDefault();
+        // Lấy tất cả field, ép tổ chức đúng id
+        const data = Object.fromEntries(new FormData(e.target));
+        data.organizationId = orgId;
+
+        // Tạo hoặc cập nhật
+        const isNew = !data.id;
+        const url   = isNew ? '/events' : `/events/${data.id}`;
+        const method = isNew ? 'POST' : 'PATCH';
+
+        const res = await fetch(url, {
+            method,
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) return alert('Lỗi khi lưu sự kiện');
+
+        // Nếu tạo mới, gửi thông báo cho chính tổ chức
+        if (isNew) {
+            const now = new Date().toISOString();
+            await fetch('/notifications', {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    recipientId: orgAccId,
+                    senderId:    adminAcc,
+                    title:       'Tạo sự kiện',
+                    content:     `Bạn đã tạo sự kiện "${data.title}"`,
+                    type:        'SYSTEM',
+                    status:      'UNREAD',
+                    createdDate: now
+                })
+            });
+        }
+
+        // Reload bảng
+        loadEvents();
+        // tự động đóng modal
+        bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
+    };
+
+    async function deleteEvent(id){
+        if (!confirm('Xóa sự kiện?')) return;
+        await fetch(`/events/${id}`,{method:'DELETE'});
+        loadEvents();
+    }
+
+    async function loadEvents(){
+        const evs = await fetch(`/events?organizationId=${orgId}`).then(r=>r.json());
+        const tb  = document.getElementById('eventsTable');
+        tb.innerHTML = '';
+        evs.forEach(e=> tb.innerHTML += `
+      <tr>
+        <td>${e.id}</td>
+        <td>${e.title}</td>
+        <td>
+          <a href="org-event-detail.html?id=${e.id}" class="btn btn-sm btn-primary">Chi tiết</a>
+          <button class="btn btn-sm btn-danger" onclick="deleteEvent(${e.id})">Xóa</button>
+        </td>
+      </tr>`);
+    }
+
+    // Khởi động
+    loadEvents();
+</script>
+</body>
+</html>
