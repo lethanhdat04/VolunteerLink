@@ -351,7 +351,7 @@
       ],
       "urgencyLevel": "HIGH",
       "status": "ACCEPTED",
-      "volunteerId": 1
+      "volunteerId": 0
     },
     {
       "id": "2",
@@ -553,130 +553,27 @@
       "createdDate": "2025-05-28T07:24:21.983Z"
     }
   ],
-  "accounts": [
+  "login": [
     {
       "id": 1,
-      "username": "volA",
-      "password": "$2b$10$…",
-      "email": "a@vol.org",
-      "accountType": "VOLUNTEER",
-      "status": "ACTIVE",
-      "createdDate": "2025-01-10T08:00:00Z"
+      "username": "volunteer01",
+      "password": "123456",
+      "accessToken": "fake-jwt-token-volunteer01",
+      "role": "VOLUNTEER"
     },
     {
       "id": 2,
-      "username": "volB",
-      "password": "$2b$…",
-      "email": "b@vol.org",
-      "accountType": "VOLUNTEER",
-      "status": "ACTIVE",
-      "createdDate": "2025-02-12T09:30:00Z"
+      "username": "admin01",
+      "password": "adminpass",
+      "accessToken": "fake-jwt-token-admin01",
+      "role": "ADMIN"
     },
     {
       "id": 3,
-      "username": "org1",
-      "password": "$2b$…",
-      "email": "org1@org.org",
-      "accountType": "ORGANIZATION",
-      "status": "ACTIVE",
-      "createdDate": "2025-03-01T10:00:00Z"
-    },
-    {
-      "id": 4,
-      "username": "org2",
-      "password": "$2b$…",
-      "email": "org2@org.org",
-      "accountType": "ORGANIZATION",
-      "status": "PENDING",
-      "createdDate": "2025-03-15T11:15:00Z"
-    },
-    {
-      "id": 5,
-      "username": "admin",
-      "password": "$2b$…",
-      "email": "admin@sys.org",
-      "accountType": "ADMIN",
-      "status": "ACTIVE",
-      "createdDate": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": 6,
-      "username": "recp",
-      "password": "$2b$…",
-      "email": "r@rec.org",
-      "accountType": "RECIPIENT",
-      "status": "ACTIVE",
-      "createdDate": "2025-04-01T12:00:00Z"
-    }
-  ],
-  "volunteers": [
-    {
-      "id": 1,
-      "accountId": 1,
-      "fullName": "Nguyễn Văn A",
-      "phoneNumber": "0912345678",
-      "address": "HCM",
-      "skills": [
-        "y tế"
-      ],
-      "availableTime": [],
-      "rating": 4.5
-    },
-    {
-      "id": 2,
-      "accountId": 2,
-      "fullName": "Trần Thị B",
-      "phoneNumber": "0987654321",
-      "address": "HN",
-      "skills": [
-        "giáo dục"
-      ],
-      "availableTime": [],
-      "rating": 4.2
-    },
-    {
-      "id": 3,
-      "accountId": 6,
-      "fullName": "Lê Văn C",
-      "phoneNumber": "0977654321",
-      "address": "DN",
-      "skills": [
-        "vận động"
-      ],
-      "availableTime": [],
-      "rating": 3.9
-    }
-  ],
-  "organizations": [
-    {
-      "id": 1,
-      "accountId": 3,
-      "name": "Green Life",
-      "description": "…",
-      "contactInfo": "0912…",
-      "address": "HCM",
-      "category": "Môi trường",
-      "verificationStatus": true
-    },
-    {
-      "id": 2,
-      "accountId": 4,
-      "name": "Food Bank",
-      "description": "…",
-      "contactInfo": "0909…",
-      "address": "HCM",
-      "category": "An sinh",
-      "verificationStatus": false
-    },
-    {
-      "id": 3,
-      "accountId": 5,
-      "name": "HelpNow",
-      "description": "…",
-      "contactInfo": "0933…",
-      "address": "HN",
-      "category": "Y tế",
-      "verificationStatus": true
+      "username": "org01",
+      "password": "orgpass",
+      "accessToken": "fake-jwt-token-org01",
+      "role": "ORGANIZATION"
     }
   ]
 }

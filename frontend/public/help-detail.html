@@ -3,14 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Chi tiết yêu cầu trợ giúp</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+    >
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+            rel="stylesheet"
+    >
+    <link rel="stylesheet" href="style.css">
     <style>
         .badge-urgency { text-transform: uppercase; }
     </style>
 </head>
-<body>
+<body data-role="VOLUNTEER">
 <div class="container my-4" id="helpContainer">
-    <a href="help-requests-list.html" class="btn btn-link">&larr; Quay lại</a>
+    <a href="help-requests.html" class="btn btn-link">&larr; Quay lại</a>
 
     <!-- Spinner loading -->
     <div id="loading" class="text-center py-5">
@@ -19,7 +27,7 @@
     </div>
 
     <!-- Nội dung chi tiết -->
-    <div id="helpDetail" style="display:none;">
+    <div id="helpDetail" style="display: none;">
         <h2 id="title"></h2>
         <p><strong>Địa điểm:</strong> <span id="location"></span></p>
         <p><strong>Mô tả:</strong> <span id="description"></span></p>
@@ -33,115 +41,165 @@
         </p>
 
         <p><strong>Trạng thái:</strong> <span id="status"></span></p>
-        <p><strong>Volunteer nhận:</strong> <span id="volunteerId"></span></p>
+        <p>
+            <strong>Volunteer nhận:</strong>
+            <span id="volunteerAssigned"></span>
+        </p>
 
         <!-- Nút nhận nhiệm vụ -->
         <div id="actionArea" class="mt-4">
-            <button id="acceptBtn" class="btn btn-success">Nhận nhiệm vụ</button>
+            <button id="acceptBtn" class="btn btn-success">Trợ giúp</button>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    (async function(){
+    (async function() {
+        const BASE_URL = 'https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io';
         const params = new URLSearchParams(window.location.search);
-        const id = params.get('id') || 1;
+        const helpId = params.get('id');
+        if (!helpId) {
+            alert('Không tìm thấy ID yêu cầu.');
+            return;
+        }
 
+        // 1) Lấy token để thêm vào header nếu backend yêu cầu
+        const token = localStorage.getItem('accessToken');
+
+        // 2) Lấy thông tin volunteer hiện tại (để có volunteerId)
+        let volunteerInfo;
         try {
-            // 1) Lấy chi tiết helpRequest
-            const res = await fetch(`http://localhost:3000/helpRequests/${id}`);
-            if (!res.ok) throw new Error('Không tìm thấy yêu cầu');
-            const h = await res.json();
-
-            // 2) Đổ dữ liệu lên DOM
-            document.getElementById('title').textContent       = h.title;
-            document.getElementById('location').textContent    = h.location;
-            document.getElementById('description').textContent = h.description;
-            document.getElementById('status').textContent      = h.status;
-
-            // Kỹ năng
-            const ul = document.getElementById('requiredSkills');
-            ul.innerHTML = '';
-            h.requiredSkills.forEach(skill => {
-                const li = document.createElement('li');
-                li.textContent = skill;
-                ul.appendChild(li);
-            });
-
-            // Cấp độ gấp
-            const urg = document.getElementById('urgency');
-            urg.textContent = h.urgencyLevel;
-            if (h.urgencyLevel === 'HIGH')        urg.classList.add('bg-danger','text-white');
-            else if (h.urgencyLevel === 'MEDIUM') urg.classList.add('bg-warning','text-dark');
-            else                                  urg.classList.add('bg-info','text-white');
-
-            // Volunteer nhận
-            const volEl = document.getElementById('volunteerId');
-            if (h.volunteerId && h.volunteerId !== 0) {
-                volEl.textContent = h.volunteerId;
-            } else {
-                volEl.textContent = 'Chưa có ai nhận';
-                volEl.classList.add('text-muted');
-            }
-
-            // 3) Ẩn spinner, hiện detail
-            document.getElementById('loading').style.display     = 'none';
-            document.getElementById('helpDetail').style.display  = 'block';
-
-            // 4) Thiết lập listener cho nút Nhận nhiệm vụ
-            const btn = document.getElementById('acceptBtn');
-            if (!h.volunteerId || h.volunteerId === 0) {
-                btn.addEventListener('click', async () => {
-                    btn.disabled   = true;
-                    btn.textContent = 'Đang gửi…';
-                    const now = new Date().toISOString();
-
-                    try {
-                        // 4.1) PATCH helpRequest
-                        const patchRes = await fetch(`http://localhost:3000/helpRequests/${id}`, {
-                            method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ volunteerId: 1, status: 'ACCEPTED' })
-                        });
-                        if (!patchRes.ok) throw new Error('Cập nhật thất bại');
-
-                        // 4.2) POST notification
-                        const notif = {
-                            recipientId: 1,
-                            senderId:    1000,
-                            title:       'Thông báo hệ thống',
-                            content:     `Bạn đã đăng ký nhận "${h.title}" thành công`,
-                            type:        'SYSTEM',
-                            status:      'UNREAD',
-                            createdDate: now
-                        };
-                        const notifRes = await fetch('http://localhost:3000/notifications', {
-                            method: 'POST',
-                            headers:{ 'Content-Type':'application/json' },
-                            body: JSON.stringify(notif)
-                        });
-                        if (!notifRes.ok) throw new Error('Không tạo được thông báo');
-
-                        // 4.3) Cập nhật UI
-                        btn.textContent = 'Đã nhận';
-                        document.getElementById('volunteerId').textContent = '1';
-                        document.getElementById('status').textContent      = 'ACCEPTED';
-                    } catch(err) {
-                        btn.disabled    = false;
-                        btn.textContent = 'Nhận nhiệm vụ';
-                        alert('Lỗi: ' + err.message);
+            const volRes = await fetch(
+                `${BASE_URL}/volunteerinf`,
+                {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
                     }
-                });
-            } else {
-                // Nếu đã nhận rồi, ẩn luôn nút
-                document.getElementById('actionArea').style.display = 'none';
+                }
+            );
+            if (!volRes.ok) {
+                console.error('Lỗi lấy volunteer info:', volRes.status);
+                alert('Không thể lấy thông tin người dùng.');
+                return;
             }
+            volunteerInfo = await volRes.json();
+        } catch (err) {
+            console.error('Lỗi kết nối volunteerinf:', err);
+            alert('Không thể kết nối tới server để lấy thông tin người dùng.');
+            return;
+        }
 
-        } catch(err) {
-            document.getElementById('loading').innerHTML =
-                `<div class="alert alert-danger">Lỗi: ${err.message}</div>`;
+        // 3) Fetch chi tiết helpRequest
+        let helpData;
+        try {
+            const helpRes = await fetch(
+                `${BASE_URL}/helpRequests/${helpId}`,
+                {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+            if (!helpRes.ok) {
+                console.error('Lỗi lấy helpRequest:', helpRes.status);
+                alert('Không thể tải thông tin yêu cầu trợ giúp.');
+                return;
+            }
+            helpData = await helpRes.json();
+        } catch (err) {
+            console.error('Lỗi fetch helpRequests/:id:', err);
+            alert('Không thể kết nối tới server.');
+            return;
+        } finally {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('helpDetail').style.display = 'block';
+        }
+
+        // 4) Hiển thị dữ liệu lên DOM
+        document.getElementById('title').textContent = helpData.title;
+        document.getElementById('location').textContent = helpData.location;
+        document.getElementById('description').textContent = helpData.description;
+
+        // Kỹ năng
+        const ul = document.getElementById('requiredSkills');
+        ul.innerHTML = '';
+        (helpData.requiredSkills || []).forEach(skill => {
+            const li = document.createElement('li');
+            li.textContent = skill;
+            ul.appendChild(li);
+        });
+
+        // Cấp độ gấp
+        const urgEl = document.getElementById('urgency');
+        urgEl.textContent = helpData.urgencyLevel || '–';
+        if (helpData.urgencyLevel === 'HIGH') {
+            urgEl.classList.add('bg-danger','text-white');
+        } else if (helpData.urgencyLevel === 'MEDIUM') {
+            urgEl.classList.add('bg-warning','text-dark');
+        } else {
+            urgEl.classList.add('bg-info','text-white');
+        }
+
+        // Trạng thái
+        document.getElementById('status').textContent = helpData.status || '–';
+
+        // Volunteer nhận
+        const volEl = document.getElementById('volunteerAssigned');
+        if (helpData.volunteerId && helpData.volunteerId !== 0) {
+            volEl.textContent = helpData.volunteerId;
+        } else {
+            volEl.textContent = 'Chưa có ai nhận';
+            volEl.classList.add('text-muted');
+        }
+
+        // 5) Thiết lập listener cho nút “Trợ giúp”
+        const btn = document.getElementById('acceptBtn');
+        if (!helpData.volunteerId || helpData.volunteerId === 0) {
+            btn.addEventListener('click', async () => {
+                btn.disabled = true;
+                btn.textContent = 'Đang gửi…';
+
+                try {
+                    // PATCH helpRequests/{id}: chỉ cập nhật volunteerId
+                    const patchRes = await fetch(
+                        `${BASE_URL}/helpRequests/${helpId}`,
+                        {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                volunteerId: volunteerInfo.volunteerId
+                            })
+                        }
+                    );
+                    if (!patchRes.ok) {
+                        throw new Error(`Cập nhật thất bại (mã ${patchRes.status})`);
+                    }
+
+                    // Cập nhật UI ngay lập tức
+                    document.getElementById('volunteerAssigned').textContent = volunteerInfo.volunteerId;
+                    btn.textContent = 'Đã nhận';
+                    btn.disabled = true;
+                } catch (err) {
+                    console.error('Lỗi khi nhận nhiệm vụ:', err);
+                    btn.disabled = false;
+                    btn.textContent = 'Trợ giúp';
+                    alert('Lỗi: ' + err.message);
+                }
+            });
+        } else {
+            // Nếu đã có volunteerId khác 0 → ẩn nút
+            document.getElementById('actionArea').style.display = 'none';
         }
     })();
 </script>
+<script src="auth.js"></script>
 </body>
 </html>

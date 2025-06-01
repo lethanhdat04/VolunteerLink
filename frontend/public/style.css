@@ -1,88 +1,141 @@
+
+
+/* === CÀI ĐẶT CHUNG === */
 body {
-    padding-top: 70px;
+    padding-top: 70px;               /* giữ nguyên khoảng đệm cho navbar */
+    background-color: #121212;       /* nền chính tối */
+    color: #e0e0e0;                  /* màu chữ sáng */
+    font-family: "Open Sans", sans-serif;
 }
+
+/* Override tất cả các .card của Bootstrap sang nền tối */
+.card,
+.card .card-body,
+.card .card-header,
+.card .card-footer {
+    background-color: #1e1e1e !important;
+    border: 1px solid #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Xóa hiệu ứng drop-shadow sáng, dùng shadow đậm hơn */
 .event-card {
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 .card-img-top {
     height: 180px;
     object-fit: cover;
 }
 
-.home-image{
+.container-dashboard-1 {
+    position: relative;
+    max-width: 1140px;    /* hoặc thay bằng max-width mong muốn */
+    margin: 0 auto;
+}
+
+/* 2. Đặt màu cho nút outline-secondary để thấy rõ trên nền tối */
+.btn-outline-secondary {
+    color: #e0e0e0;
+    border-color: #e0e0e0;
+}
+.btn-outline-secondary:hover {
+    color: #121212;
+    background-color: #e0e0e0;
+}
+
+.btn-view-event:hover{
+    text-decoration: none;
+    background-color: #ffb300;
+    color: #1e1e1e;
+}
+
+/* === HOME BANNER (home-image) === */
+.home-image {
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    margin-bottom: 2rem;
+    margin: 0;           /* bỏ margin-bottom */
     position: relative;
+    z-index: 0;
 }
-
-.home-image img{
+.home-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     object-fit: cover;
-    display: block;
-    position: absolute;
-    top: 0; left: 0;
-    z-index: 0;
 }
-
-.home-image .overlay{
+/* Overlay nhẹ để tạo độ tối cho ảnh banner */
+.home-image .overlay {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
     pointer-events: none;
 }
 
-.navbar{
-    background-color: black;
+/* === NAVBAR === */
+.navbar {
+    background-color: rgba(0, 0, 0, 0.8) !important;
     display: flex;
     flex-direction: row;
     align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
 }
-
 .container-fluid {
-    position: relative;
+    position: relative !important;
 }
-
-.volunteer{
-    color: white;
+/* Logo “Volunteer” / “Organization” */
+.volunteer,
+.organization {
+    color: #fff !important;
     position: absolute;
-    margin-left: 5rem;
     top: 45%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 1.8rem !important;
+    font-weight: bold !important;
     pointer-events: auto;
 }
+.volunteer { margin-left: 5rem; }
+.organization { margin-left: 6.5rem; }
 
-.organization{
-    color: white;
-    position: absolute;
-    margin-left: 6.5rem;
-    top: 45%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    font-size: 2rem;
-    font-weight: bold;
-    pointer-events: auto;
+/* Link trong navbar */
+.nav-link {
+    color: #ccc !important;
+    font-weight: 500 !important;
+    margin-left: 1rem !important;
+}
+.nav-link:hover {
+    color: #ffb300 !important;
+    text-decoration: none;
+}
+/* Hover logo đổi vàng nhạt */
+.navbar-brand:hover {
+    color: #ffb300 !important;
+    text-decoration: none;
+}
+/* Nút Logout */
+#btnLogout {
+    margin-right: 0.5rem;
 }
 
+/* Khi collapse (desktop) */
 .collapse.navbar-collapse {
     display: flex !important;
     justify-content: center;
     width: 100%;
 }
-
 .navbar-nav {
     display: flex;
     justify-content: center;
@@ -92,28 +145,7 @@ body {
     font-weight: bold;
 }
 
-.navbar-brand:hover{
-    color: #ffb300;
-}
-
-.nav-link{
-    color: white ;
-}
-
-.nav-link:hover{
-    color: #ffb300;
-}
-
-.arrow-back{
-    color: black;
-}
-
-.container-dashboard-1 {
-    position: relative;
-    max-width: 1140px;  /* giữ slide ở chính giữa như cũ */
-    margin: 0 auto;
-}
-
+/* === CAROUSEL CONTROLS === */
 /* thu hẹp vùng click quanh icon */
 .carousel-control-prev,
 .carousel-control-next {
@@ -125,40 +157,310 @@ body {
     padding: 0;
     background: none;
     border: none;
-    pointer-events: none; /* tắt click toàn bộ khu vực */
+    pointer-events: none;
     z-index: 10;
 }
-
-/* chỉ cho icon nhận sự kiện click */
+/* icon nhận click */
 .carousel-control-prev .material-symbols-outlined,
 .carousel-control-next .material-symbols-outlined {
     pointer-events: auto;
     font-size: 3rem;
-    color: black;
-    background-color: rgba(51, 51, 51, 0.53);
+    color: #e0e0e0;                                  /* icon màu sáng */
+    background-color: rgba(20, 20, 20, 0.8);        /* nền icon tối */
     border-radius: 1.5rem;
 }
-
 .carousel-control-prev .material-symbols-outlined:hover,
-.carousel-control-next .material-symbols-outlined:hover{
+.carousel-control-next .material-symbols-outlined:hover {
     background-color: #ffb300;
+    color: #1e1e1e;
 }
+/* đẩy icon ra ngoài khung slide */
+.carousel-control-prev { left: -100px; }
+.carousel-control-next { right: -100px; }
 
-/* đẩy icon ra ngoài khung slide, nhưng vẫn trong vùng container-dashboard-1 */
-.carousel-control-prev {
-    left: -100px;
-}
-
-.carousel-control-next {
-    right: -100px;
-}
-
-.btn-nhan:active{
+/* === NÚT VÀ HIỆU ỨNG CHUNG === */
+.btn-nhan:active {
     color: #ffb300 !important;
 }
-.btn-nhan:hover{
+.btn-nhan:hover {
     background-color: rgba(51, 51, 51, 0.53) !important;
 }
-.btn-gui{
+.btn-gui {
     background-color: rgba(51, 51, 51, 0.53) !important;
 }
+
+/* === ANIMATION CHUYỂN TRANG (slide in/out) === */
+#app {
+    position: relative;
+    overflow: hidden;
+}
+.page-enter {
+    animation: slide-in 0.5s forwards ease;
+}
+.page-exit {
+    animation: slide-out 0.5s forwards ease;
+}
+@keyframes slide-in {
+    from { transform: translateX(-100%); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes slide-out {
+    from { transform: translateX(0);    opacity: 1; }
+    to   { transform: translateX(100%); opacity: 0; }
+}
+
+/* === TIÊU ĐỀ CHUNG === */
+.profile-title {
+    font-size: 1.8rem !important;
+    margin-bottom: 1.5rem !important;
+    border-bottom: 2px solid #444 !important;
+    padding-bottom: 0.5rem !important;
+}
+/* Spinner loading */
+#loading {
+    margin-top: 2rem !important;
+}
+
+/* === CSS CHO PHẦN PROFILE: 2 KHUNG === */
+/* Wrapper chung */
+.profile-wrapper {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    max-width: 1500px !important;
+    margin: 0 auto !important;
+    gap: 2rem !important;
+}
+
+/* ---------- KHUNG TRÁI: avatar + tên + role ---------- */
+.profile-left {
+    flex: 0 0 450px !important;
+    max-width: 450px !important;
+    background-color: #1e1e1e !important;      /* nền tối */
+    border: 1px solid #333 !important;          /* border tối */
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+    padding: 2rem 1rem !important;
+    text-align: center !important;
+}
+.profile-avatar {
+    width: 350px !important;
+    height: 350px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    margin-bottom: 1.2rem !important;
+    background-color: #2c2c2c !important;       /* nền placeholder avatar */
+}
+.profile-name {
+    margin-bottom: 0.5rem !important;
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    color: #e0e0e0 !important;                   /* chữ sáng */
+}
+.profile-role {
+    display: inline-block !important;
+    margin-top: 0.5rem !important;
+    padding: 0.4rem 1rem !important;
+    background-color: #333 !important;           /* nền nút tối */
+    color: #fff !important;
+    border-radius: 4px !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase !important;
+}
+
+/* ---------- KHUNG PHẢI: thông tin tĩnh & form ---------- */
+.profile-right {
+    display: flex;
+    flex: 1 !important;
+    background-color: #1e1e1e !important;
+    border: 1px solid #333 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+    padding: 2rem !important;
+    flex-direction: column;
+}
+/* staticInfo (các nhãn nằm yên) */
+#staticInfo .col-form-label {
+    font-weight: 500 !important;
+    color: #ccc !important;                      /* nhãn chữ mờ */
+}
+#staticInfo span,
+#staticInfo p {
+    font-size: 1rem !important;
+    color: #e0e0e0 !important;                   /* chữ sáng */
+}
+/* Nút Cập nhật */
+#btnEdit {
+    background-color: #ffb300 !important;        /* giữ nguyên màu vàng */
+    border-color: #ffb300 !important;
+    font-weight: 600 !important;
+}
+
+/* Form edit (ẩn ban đầu) */
+.profile-form-wrapper {
+    display: none; /* ẩn ban đầu */
+}
+.profile-form .form-label {
+    font-weight: 500 !important;
+    color: #e0e0e0 !important;                   /* chữ nhãn sáng */
+}
+.profile-form .form-control {
+    background-color: #2c2c2c !important;         /* nền input tối */
+    border: 1px solid #555 !important;            /* border input tối */
+    color: #e0e0e0 !important;
+}
+.profile-form input[readonly] {
+    background-color: #2c2c2c !important;
+    cursor: not-allowed !important;
+    color: #aaa !important;
+}
+/* Nút Lưu thay đổi */
+.profile-form .btn-primary {
+    background-color: #007bff !important;         /* giữ màu xanh Bootstrap */
+    border-color: #007bff !important;
+    font-weight: 600 !important;
+}
+/* Đảm bảo #profileContent flex không bị Bootstrap override */
+#profileContent {
+    display: flex !important;
+}
+
+/* === CSS CHUNG CHO CÁC TRANG TRONG DỰ ÁN === */
+/* Card chung (đã override ở phần đầu) */
+
+/* Tiêu đề trang (thường là <h2> hoặc <h3>) giữ nguyên kiểu, chỉ đổi màu nếu cần */
+h2, h3, h4, h5, h6 {
+    color: #e0e0e0;
+}
+
+/* Các bảng (table) */
+.table {
+    color: #e0e0e0;
+    background-color: #1e1e1e !important;
+    border-color: #333;
+}
+.table th,
+.table td {
+    border-top: 1px solid #333;
+    background-color: #1e1e1e !important;
+    color: #e0e0e0;
+}
+
+/* Link thông thường */
+a {
+    color: #9bbcff;
+    text-decoration: none;
+}
+a:hover {
+    color: #ffb300;
+    text-decoration: underline;
+}
+
+/* Badge mặc định */
+.badge {
+    background-color: #333 !important;
+    color: #e0e0e0 !important;
+}
+/* Badge tình trạng (ví dụ bg-success, bg-warning… vẫn giữ Bootstrap, nhưng chữ đủ tương phản) */
+.badge.bg-success {
+    background-color: #28a745 !important;
+    color: #fff !important;
+}
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #1e1e1e !important;
+}
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+}
+.badge.bg-info {
+    background-color: #17a2b8 !important;
+    color: #fff !important;
+}
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+    color: #fff !important;
+}
+/* Các nút Bootstrap (btn) */
+.btn {
+    border-radius: 4px;
+    font-weight: 500;
+}
+.btn-primary {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #fff !important;
+}
+.btn-primary:hover {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+
+/* Form chung */
+.form-control,
+.form-select {
+    background-color: #2c2c2c !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #555 !important;
+}
+.form-control:focus,
+.form-select:focus {
+    background-color: #2c2c2c !important;
+    color: #e0e0e0 !important;
+    border-color: #777 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 179, 0, 0.25);
+}
+
+/* Spinner mặc định (Bootstrap) */
+.spinner-border {
+    color: #ffb300 !important;
+}
+
+/* Các input number, text, textarea… */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+    background-color: #2c2c2c !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #555 !important;
+}
+
+/* Modal (dùng ở trong org-profile, manage-events…) */
+.modal-content {
+    background-color: #1e1e1e !important;
+    border: 1px solid #333 !important;
+    color: #e0e0e0;
+}
+.modal-header,
+.modal-body,
+.modal-footer {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0;
+}
+.btn-close {
+    filter: invert(100%);
+}
+
+#staticInfo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+
+#staticInfo #btnEdit {
+    margin-top: auto;
+}
+
+#staticStatus.badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.5rem; !important;
+    font-weight: inherit !important;
+    background-color: rgba(6, 163, 13, 0.51) !important;
+    color: rgb(23, 236, 33) !important;
+}
+
+
