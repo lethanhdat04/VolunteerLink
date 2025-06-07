@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>Đánh giá TNV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>.star{font-size:1.5rem;cursor:pointer}.checked{color:gold}</style>
+</head>
+<body>
+<nav><!-- org navbar --></nav>
+<div class="container my-4">
+    <h2>Đánh giá TNV</h2>
+    <div id="volEvalList"></div>
+</div>
+<script>
+    const orgId=1;
+    function submitReview(id){
+        const stars=[...document.querySelectorAll(`#stars-${id} .checked`)].length;
+        fetch(`/registrations/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({rating:stars,status:'ATTENDED'})})
+            .then(()=>alert('Đã gửi'));
+    }
+    (async()=>{
+        const evs=await fetch(`/events?organizationId=${orgId}`).then(r=>r.json());
+        const ids=evs.map(e=>e.id);
+        const regs=await fetch('/registrations?status=CONFIRMED').then(r=>r.json());
+        regs.filter(r=>ids.includes(r.eventId)).forEach(r=>{
+            document.getElementById('volEvalList').innerHTML += `
+      <div class="mb-4">
+        <h5>Reg ${r.id} – Vol ${r.volunteerId}</h5>
+        <div id="stars-${r.id}">
+          ${[1,2,3,4,5].map(i=>`<span class="star" data-id="${r.id}" data-star="${i}">&#9733;</span>`).join('')}
+        </div>
+        <button class="btn btn-success mt-2" onclick="submitReview(${r.id})">Gửi</button>
+      </div>`;
+        });
+        document.querySelectorAll('.star').forEach(s=>{
+            s.onclick=()=> {
+                const id=s.dataset.id,val=+s.dataset.star;
+                document.querySelectorAll(`#stars-${id} .star`)
+                    .forEach(x=>x.classList.toggle('checked',+x.dataset.star<=val));
+            };
+        });
+    })();
+</script>
+</body>
+</html>

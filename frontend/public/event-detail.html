@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sự kiện</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .badge-status { text-transform: uppercase; }
+    </style>
+</head>
+<body data-role="VOLUNTEER">
+
+<div class="container my-4" id="event-container">
+    <div id="loading" class="text-center py-5">
+        <div class="spinner-border text-primary"></div>
+        <p>Đang tải…</p>
+    </div>
+
+    <div id="event-detail" class="row" style="display:none;">
+        <div class="col-md-7">
+            <h3 id="title"></h3>
+            <p><strong>Địa điểm:</strong> <span id="location"></span></p>
+            <p><strong>Thời gian:</strong> <span id="time"></span></p>
+            <p><strong>Mô tả:</strong></p>
+            <p id="description"></p>
+            <p><strong>Trạng thái:</strong> <span id="statusBadge" class="badge badge-status"></span></p>
+        </div>
+        <div class="col-md-5">
+            <form id="registrationForm">
+                <button type="submit" class="btn btn-success w-100">Đăng ký</button>
+            </form>
+            <div id="regMessage" class="mt-3"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        const loadingEl = document.getElementById('loading');
+        const detailEl  = document.getElementById('event-detail');
+        const formEl    = document.getElementById('registrationForm');
+        const msgEl     = document.getElementById('regMessage');
+
+        // 1. Lấy eventId từ query string
+        const params = new URLSearchParams(location.search);
+        const eventId = params.get('id');
+        if (!eventId) {
+            alert('Không tìm thấy ID sự kiện.');
+            return;
+        }
+
+        // 2. Lấy token từ localStorage
+        const token = localStorage.getItem('accessToken');
+
+        let volunteer;
+        try {
+            const volunteerRes = await fetch(
+                'https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/volunteerinf',
+                {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+            if (!volunteerRes.ok) {
+                console.error('Lỗi khi lấy volunteer info:', volunteerRes.status);
+                alert('Không lấy được thông tin người dùng.');
+                return;
+            }
+            volunteer = await volunteerRes.json();
+            console.log('Volunteer info:', volunteer);
+            // volunteer.volunteerId, volunteer.fullName, v.v.
+        } catch (err) {
+            console.error('Lỗi fetch volunteerinf:', err);
+            alert('Không thể kết nối tới server để lấy thông tin user.');
+            return;
+        }
+
+        // 4. Gọi GET /events/:id để lấy chi tiết event (kèm registered)
+        let e;
+        try {
+            const res = await fetch(
+                `https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/events/${eventId}`,
+                {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+            if (!res.ok) {
+                console.error('Lỗi khi lấy event:', res.status);
+                alert('Không thể tải thông tin sự kiện.');
+                return;
+            }
+            e = await res.json();
+            console.log('Event trả về:', e);
+        } catch (err) {
+            console.error('Lỗi fetch event-detail:', err);
+            alert('Không thể kết nối tới server.');
+            return;
+        } finally {
+            loadingEl.style.display = 'none';
+            detailEl.style.display  = 'flex';
+        }
+
+        // 5. Điền dữ liệu event lên giao diện
+        document.getElementById('title').textContent       = e.title;
+        document.getElementById('location').textContent    = e.location;
+        document.getElementById('description').textContent = e.description;
+        const start = new Date(e.startTime);
+        const end   = new Date(e.endTime);
+        document.getElementById('time').textContent =
+            `${start.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}`
+            + ' - ' +
+            `${end.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}`;
+
+        // 6. Hiển thị badge trạng thái
+        const badge = document.getElementById('statusBadge');
+        badge.textContent = e.status || 'UNKNOWN';
+        if (e.status === 'PLANNED') badge.classList.add('bg-primary');
+        else if (e.status === 'ONGOING') badge.classList.add('bg-success');
+        else if (e.status === 'COMPLETED') badge.classList.add('bg-secondary');
+        else badge.classList.add('bg-dark');
+
+        // 7. Ẩn/hiện form dựa vào e.registered
+        if (e.registered) {
+            formEl.style.display = 'none';
+            msgEl.innerHTML = `<div class="alert alert-warning">Bạn đã đăng ký tham gia sự kiện này.</div>`;
+        } else {
+            formEl.style.display = 'block';
+        }
+
+        // 8. Xử lý submit form (POST /registrations), giờ dùng volunteer.volunteerId
+        formEl.onsubmit = async function(ev) {
+            ev.preventDefault();
+            const now = new Date().toISOString();
+            try {
+                await fetch(
+                    'https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/registrations',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            eventId:          eventId,
+                            volunteerId:      volunteer.volunteerId,
+                            registrationDate: now,
+                            status:           'REGISTERED',
+                            rating:           0
+                        })
+                    }
+                );
+
+                formEl.style.display = 'none';
+                msgEl.innerHTML = `<div class="alert alert-success">Đăng ký thành công!</div>`;
+            } catch (err) {
+                console.error('Lỗi khi đăng ký:', err);
+                msgEl.innerHTML = `<div class="alert alert-danger">Đăng ký thất bại. Vui lòng thử lại.</div>`;
+            }
+        };
+    });
+</script>
+<script src="auth.js"></script>
+</body>
+</html>

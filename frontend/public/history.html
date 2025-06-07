@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch sử hoạt động</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .badge-status { text-transform: uppercase; }
+    </style>
+</head>
+<body data-role="VOLUNTEER">
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand volunteer" href="#">Volunteer</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="events-list.html">Sự kiện phù hợp</a></li>
+                <li class="nav-item"><a class="nav-link" href="help-requests.html">Yêu cầu trợ giúp</a></li>
+                <li class="nav-item"><a class="nav-link" href="history.html">Lịch sử</a></li>
+                <li class="nav-item"><a class="nav-link" href="profile.html">Hồ sơ</a></li>
+            </ul>
+        </div>
+        <a class="nav-link" href="#" id="btnLogout"><span class="material-symbols-outlined">logout</span></a>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <h2 class="text-center mb-4">Lịch sử hoạt động</h2>
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>Thời gian</th>
+            <th>Tiêu đề</th>
+            <th>Trạng thái</th>
+        </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+    </table>
+</div>
+
+<script>
+    (async () => {
+        // 1) Lấy token đã lưu (nếu có)
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            alert('Bạn chưa đăng nhập hoặc phiên đã hết hạn.');
+            return;
+        }
+
+        // 2) Gọi GET /history kèm header Authorization
+        let items = [];
+        try {
+            const res = await fetch('https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/history', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!res.ok) throw new Error(`Lỗi ${res.status}`);
+            items = await res.json();
+        } catch (err) {
+            console.error('Không lấy được lịch sử:', err);
+            return;
+        }
+
+        // 3) Render vào bảng
+        const tb = document.getElementById('historyBody');
+        items.forEach(i => {
+            const date = new Date(i.time);
+            const formatted = date.toLocaleString('vi-VN', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+            tb.innerHTML += `
+            <tr>
+                <td>${ formatted }</td>
+                <td>${ i.title }</td>
+                <td>
+                    <span class="badge ${
+                i.status === 'COMPLETED' ? 'bg-success' :
+                    i.status === 'PENDING'   ? 'bg-warning text-dark' :
+                        'bg-secondary'
+            } badge-status">
+                        ${ i.status }
+                    </span>
+                </td>
+            </tr>`;
+        });
+    })();
+</script>
+
+<script src="auth.js"></script>
+</body>
+</html>
