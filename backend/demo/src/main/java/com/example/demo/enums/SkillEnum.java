@@ -1,0 +1,19 @@
+package com.example.demo.enums;
+
+public enum SkillEnum {
+    COOKING,
+    TEACHING,
+    CLEANING,
+    FIRST_AID,
+    TRANSPORTATION,
+    TRANSLATION,
+    IT_SUPPORT,
+    COUNSELING,
+    FUNDRAISING,
+    EVENT_ORGANIZATION,
+    CHILDCARE,
+    ELDERLY_CARE,
+    ENVIRONMENTAL_CLEANUP,
+    DISASTER_RELIEF,
+    COMMUNITY_OUTREACH
+}
