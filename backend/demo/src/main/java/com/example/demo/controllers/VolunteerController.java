@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.VolunteerDTO;
 import com.example.demo.enities.Volunteer;
+import com.example.demo.enums.SkillEnum;
 import com.example.demo.services.VolunteerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,21 @@ public class VolunteerController {
         return ResponseEntity.ok(volunteerService.getVolunteerById(id));
     }
 
-    @PutMapping("/edit")
-    public ResponseEntity<VolunteerDTO> updateVolunteer(@RequestBody VolunteerDTO volunteerDTO) {
-        return ResponseEntity.ok(volunteerService.updateVolunteer(volunteerDTO));
+    @GetMapping("/skill/{skill}")
+    public ResponseEntity<List<VolunteerDTO>> getVolunteersBySkill(@PathVariable SkillEnum skill) {
+        return ResponseEntity.ok(volunteerService.getVolunteersBySkill(skill));
+    }
+
+    @PutMapping("/{id}/update")
+    public ResponseEntity<VolunteerDTO> updateVolunteer(@PathVariable Integer id, @RequestBody VolunteerDTO volunteerDTO) {
+        return ResponseEntity.ok(volunteerService.updateVolunteer(id, volunteerDTO));
+    }
+
+
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteVolunteer(@PathVariable Integer id) {
+        volunteerService.deleteVolunteerById(id);
+        return ResponseEntity.noContent().build();
     }
 }

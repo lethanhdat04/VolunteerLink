@@ -17,8 +17,8 @@ public class Organization extends User {
 
     private String website;
 
-    @ManyToMany(mappedBy = "organizations")
-    private Set<SupportArea> supportAreas = new HashSet<>();
+//    @ManyToMany(mappedBy = "organizations")
+//    private Set<SupportArea> supportAreas = new HashSet<>();
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
     private Set<Event> events;

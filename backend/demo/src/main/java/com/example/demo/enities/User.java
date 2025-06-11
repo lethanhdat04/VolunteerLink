@@ -27,7 +27,8 @@ public class User {
 
     private String phoneNumber;
 
-    private String address;
+    private Double latitude = 22.0;
+    private Double longitude = 21.0;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id")

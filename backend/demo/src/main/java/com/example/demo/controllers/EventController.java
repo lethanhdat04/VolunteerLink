@@ -32,7 +32,7 @@ public class EventController {
 
     @PostMapping("/create")
     public EventDTO saveEvent(@RequestBody EventDTO eventDTO) {
-        return eventService.saveEvent(eventDTO);
+        return eventService.createEvent(eventDTO);
     }
 
     @PutMapping("/update")

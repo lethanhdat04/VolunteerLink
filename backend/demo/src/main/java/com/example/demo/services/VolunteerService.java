@@ -1,12 +1,11 @@
 package com.example.demo.services;
 
 import com.example.demo.dtos.VolunteerDTO;
-import com.example.demo.enities.Role;
 import com.example.demo.enities.Volunteer;
+import com.example.demo.enums.SkillEnum;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.VolunteerRepository;
 import com.example.demo.utils.DtoMapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,21 +46,34 @@ public class VolunteerService {
 //        return dtoMapper.map(volunteer, VolunteerDTO.class);
 //    }
 
-    public VolunteerDTO updateVolunteer(VolunteerDTO volunteerDTO) {
-        if (volunteerDTO.getId() == null) {
+    public VolunteerDTO updateVolunteer(Integer id, VolunteerDTO volunteerDTO) {
+        if (id == null) {
             throw new IllegalArgumentException("Volunteer id is null");
         }
 
-        Volunteer volunteer = volunteerRepository.findById(volunteerDTO.getId()).orElseThrow(() -> new RuntimeException("Volunteer not found"));
+        Volunteer volunteer = volunteerRepository.findById(id).orElseThrow(() -> new RuntimeException("Volunteer not found"));
 
         volunteer.setFullName(volunteerDTO.getFullName());
-        volunteer.setRole(volunteerDTO.getRole());
+        // volunteer.setRole(volunteerDTO.getRole());
         volunteer.setEmail(volunteerDTO.getEmail());
         volunteer.setAvailableHours(volunteerDTO.getAvailableHours());
         volunteer.setRating(volunteerDTO.getRating());
         volunteer.setSkills(volunteerDTO.getSkills());
+        volunteer.setStatus(volunteerDTO.getStatus());
+        volunteer.setPhoneNumber(volunteerDTO.getPhoneNumber());
+        volunteer.setLatitude(volunteerDTO.getLatitude());
+        volunteer.setLongitude(volunteerDTO.getLongitude());
 
         Volunteer updatedVolunteer = volunteerRepository.save(volunteer);
         return dtoMapper.map(updatedVolunteer, VolunteerDTO.class);
+    }
+
+    public List<VolunteerDTO> getVolunteersBySkill(SkillEnum skill) {
+        List<Volunteer> volunteers = volunteerRepository.findBySkillsContaining(skill);
+        return dtoMapper.mapList(volunteers, VolunteerDTO.class);
+    }
+
+    public void deleteVolunteerById(Integer id) {
+        volunteerRepository.deleteById(id);
     }
 }

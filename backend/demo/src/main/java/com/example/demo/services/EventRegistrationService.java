@@ -45,7 +45,7 @@ public class EventRegistrationService {
         eventRegistration.setEvent(event);
         eventRegistration.setVolunteer(volunteer);
         eventRegistration.setRegistrationTime(LocalDateTime.now());
-        eventRegistration.setStatus(RegistrationStatusEnum.PENDING);
+        eventRegistration.setStatus(RegistrationStatusEnum.REGISTERED);
 
         EventRegistration savedEntity = eventRegistrationRepository.save(eventRegistration);
         return dtoMapper.map(savedEntity, EventRegistrationDTO.class);
@@ -76,20 +76,11 @@ public class EventRegistrationService {
         EventRegistration eventRegistration = eventRegistrationRepository.findById(eventRegistrationDTO.getId()).orElseThrow(() -> new RuntimeException("Registration not found"));
         eventRegistration.setRegistrationTime(eventRegistrationDTO.getRegistrationDate());
         eventRegistration.setStatus(eventRegistrationDTO.getStatus());
-        eventRegistration.setReview(eventRegistrationDTO.getReview());
+//        eventRegistration.setReview(eventRegistrationDTO.getReview());
         eventRegistration.setRating(eventRegistrationDTO.getRating());
         eventRegistration.setVolunteer(volunteerRepository.findById(eventRegistrationDTO.getVolunteerId()).orElseThrow(() -> new RuntimeException("Volunteer not found")));
         eventRegistration.setEvent(eventRepository.findById(eventRegistrationDTO.getEventId()).orElseThrow(() -> new RuntimeException("Event not found")));
 
-        EventRegistration updatedEventRegistration = eventRegistrationRepository.save(eventRegistration);
-        return dtoMapper.map(updatedEventRegistration, EventRegistrationDTO.class);
-    }
-
-    @Transactional
-    public EventRegistrationDTO pendingRegistration(Integer id) {
-        EventRegistration eventRegistration = eventRegistrationRepository.findById(id).orElseThrow(() -> new RuntimeException("Registration not found"));
-        eventRegistration.setStatus(RegistrationStatusEnum.PENDING);
-        eventRegistration.setUpdateAt(LocalDateTime.now());
         EventRegistration updatedEventRegistration = eventRegistrationRepository.save(eventRegistration);
         return dtoMapper.map(updatedEventRegistration, EventRegistrationDTO.class);
     }

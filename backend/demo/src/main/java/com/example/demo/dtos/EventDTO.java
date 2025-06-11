@@ -15,11 +15,10 @@ public class EventDTO {
     private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private Set<SkillEnum> requiredSkills;
     private Integer maxParticipants;
     private Integer participants;
     private EventStatusEnum status;
     private boolean registered;
-//    private Integer organizationId; // or OrganizationDTO if you need nested info
+    private Integer organizationId; // or OrganizationDTO if you need nested info
 //    private Set<Integer> volunteerIds; // or List<VolunteerDTO> if needed
 }

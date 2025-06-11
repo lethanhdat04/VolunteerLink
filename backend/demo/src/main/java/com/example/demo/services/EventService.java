@@ -41,7 +41,7 @@ public class EventService {
         return dtoMapper.map(event, EventDTO.class);
     }
 
-    public EventDTO saveEvent(EventDTO eventDTO) {
+    public EventDTO createEvent(EventDTO eventDTO) {
         Event event = dtoMapper.map(eventDTO, Event.class);
         event = eventRepository.save(event);
 

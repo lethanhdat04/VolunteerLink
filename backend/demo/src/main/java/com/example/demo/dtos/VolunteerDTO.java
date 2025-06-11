@@ -14,14 +14,15 @@ public class VolunteerDTO {
     private String fullName;
     private String email;
 
-    private Role role;
+    // private Role role;
 
     private Set<SkillEnum> skills;
     private Integer availableHours;
     private Float rating;
     private UserStatusEnum status;
     private String phoneNumber;
-    private String address;
+    private Double latitude;
+    private Double longitude;
 
 //    private Date createdAt;
 //    private Date updateAt;
