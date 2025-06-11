@@ -15,7 +15,6 @@ public class EventDTO {
     private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private Set<SkillEnum> requiredSkills;
     private Integer maxParticipants;
     private Integer participants;
     private EventStatusEnum status;
