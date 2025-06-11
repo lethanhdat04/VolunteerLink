@@ -1,157 +1,548 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <title>Chi tiết sự kiện (Tổ chức)</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <title>Chi tiết / Chỉnh sửa sự kiện & Danh sách đăng ký</title>
+    <!-- Bootstrap để lấy class .btn, .form-control… -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body data-role="ORGANIZATION">
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-        <a class="navbar-brand organization" href="dashboard-organization.html">Organization</a>
-        <div class="collapse navbar-collapse" id="orgNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="dashboard-organization.html">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="manage-events.html">Quản lý sự kiện</a></li>
-                <li class="nav-item"><a class="nav-link" href="approve-registrations.html">Duyệt đăng ký</a></li>
-                <li class="nav-item"><a class="nav-link" href="stats-organization.html">Thống kê</a></li>
-                <li class="nav-item"><a class="nav-link" href="org-profile.html">Hồ sơ</a></li>
-            </ul>
-        </div>
-        <a class="nav-link" href="#" id="btnLogout"><span class="material-symbols-outlined">logout</span></a>
+<div id="detailContainer">
+    <!-- Nút “Back” -->
+    <button class="btn btn-link mb-3" onclick="window.history.back()">
+        &larr; Quay lại
+    </button>
+
+    <!-- Spinner loading (sẽ ẩn khi JS load xong) -->
+    <div id="loading" class="text-center my-4">
+        <div class="spinner-border text-warning" role="status"></div>
+        <p class="mt-2">Đang tải thông tin sự kiện…</p>
     </div>
-</nav>
 
-<div class="container my-4">
-    <h2 id="evtTitle" class="mb-4"></h2>
+    <!-- === PHẦN THÔNG TIN TĨNH === -->
+    <div id="staticInfo" class="hidden">
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label">Tiêu đề:</label>
+            <div class="col-sm-9">
+                <p class="form-control-plaintext" id="titleStatic">–</p>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label">Địa điểm:</label>
+            <div class="col-sm-9">
+                <p class="form-control-plaintext" id="locationStatic">–</p>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label">Thời gian:</label>
+            <div class="col-sm-9">
+                <p class="form-control-plaintext" id="timeStatic">–</p>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label">Mô tả:</label>
+            <div class="col-sm-9">
+                <p class="form-control-plaintext" id="descriptionStatic">–</p>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label">Required Skills:</label>
+            <div class="col-sm-9">
+                <p class="form-control-plaintext" id="skillsStatic">–</p>
+            </div>
+        </div>
+        <div class="d-flex align-items-center">
+            <button id="btnEdit" class="btn btn-sm btn-warning me-3">
+                <span class="material-symbols-outlined align-middle">edit</span>
+                <span>Chỉnh sửa</span>
+            </button>
+            <div>
+                <strong>Participants:</strong>
+                <span id="participantsStatic">0</span> /
+                <span id="maxParticipantsStatic">0</span>
+            </div>
+            <div class="ms-auto">
+                <strong>Trạng thái:</strong>
+                <span id="statusStatic" class="badge bg-secondary">–</span>
+            </div>
+        </div>
+    </div>
 
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#info">Thông tin sự kiện</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#regs">Đăng ký</button>
-        </li>
-    </ul>
-
-    <div class="tab-content p-3 border border-top-0">
-        <div id="info" class="tab-pane fade show active">
-            <form id="editEvtForm">
-                <input type="hidden" name="id" id="eventId">
-                <input type="hidden" name="organizationId" value="1">
-                <div class="mb-3">
-                    <label class="form-label">Tiêu đề</label>
-                    <input type="text" class="form-control" name="title" required>
+    <!-- === PHẦN FORM CHỈNH SỬA === -->
+    <div id="detailForm" class="hidden mt-4">
+        <h5>Chỉnh sửa sự kiện</h5>
+        <form id="eventDetailForm">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="titleDetail" class="form-label">Tiêu đề</label>
+                    <input type="text" class="form-control" id="titleDetail" required />
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Mô tả</label>
-                    <textarea class="form-control" name="description" rows="3" required></textarea>
+                <div class="col-md-6">
+                    <label for="locationDetail" class="form-label">Địa điểm</label>
+                    <input type="text" class="form-control" id="locationDetail" required />
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Địa điểm</label>
-                    <input type="text" class="form-control" name="location">
+                <div class="col-md-6">
+                    <label for="startTimeDetail" class="form-label">Thời gian bắt đầu</label>
+                    <input type="datetime-local" class="form-control" id="startTimeDetail" required />
                 </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Bắt đầu</label>
-                        <input type="datetime-local" class="form-control" name="startTime">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Kết thúc</label>
-                        <input type="datetime-local" class="form-control" name="endTime">
-                    </div>
+                <div class="col-md-6">
+                    <label for="endTimeDetail" class="form-label">Thời gian kết thúc</label>
+                    <input type="datetime-local" class="form-control" id="endTimeDetail" required />
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Kỹ năng yêu cầu</label>
-                    <input type="text" class="form-control" name="requiredSkills" placeholder="phân cách bằng dấu phẩy">
+                <div class="col-12">
+                    <label for="descriptionDetail" class="form-label">Mô tả</label>
+                    <textarea class="form-control" id="descriptionDetail" rows="2"></textarea>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Số tối đa</label>
-                    <input type="number" class="form-control" name="maxParticipants">
+                <div class="col-md-6">
+                    <label for="skillsDetail" class="form-label">Required Skills</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="skillsDetail"
+                            placeholder="Ví dụ: Làm việc nhóm, Giao tiếp"
+                    />
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Trạng thái</label>
-                    <select class="form-select" name="status">
-                        <option>PLANNED</option>
-                        <option>ONGOING</option>
-                        <option>COMPLETED</option>
-                        <option>CANCELLED</option>
+                <div class="col-md-3">
+                    <label for="maxPartsDetail" class="form-label">Max Participants</label>
+                    <input
+                            type="number"
+                            class="form-control"
+                            id="maxPartsDetail"
+                            min="1"
+                            required
+                    />
+                </div>
+                <div class="col-md-3">
+                    <label for="statusDetail" class="form-label">Status</label>
+                    <select class="form-select" id="statusDetail" required>
+                        <option value="PLANNED">PLANNED</option>
+                        <option value="ONGOING">ONGOING</option>
+                        <option value="COMPLETED">COMPLETED</option>
+                        <option value="CANCELLED">CANCELLED</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-success">Lưu thay đổi</button>
-            </form>
-        </div>
+            </div>
 
-        <div id="regs" class="tab-pane fade">
-            <h5 class="mb-3">Danh sách đăng ký (đã xác nhận)</h5>
-            <ul class="list-group" id="regList"></ul>
-        </div>
+            <div class="mt-4 text-end">
+                <button type="button" class="btn btn-secondary me-2" id="btnCancelDetail">
+                    Hủy
+                </button>
+                <button type="submit" class="btn btn-success">
+                    <span class="material-symbols-outlined align-middle">save</span>
+                    <span>Lưu thay đổi</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- === PHẦN DANH SÁCH ĐĂNG KÝ === -->
+    <div id="registrationList" class="mt-5 hidden">
+        <h5>Danh sách đăng ký</h5>
+        <!-- Các card đăng ký sẽ được JS chèn vào đây -->
     </div>
 </div>
 
+<!-- Bootstrap JS (nếu cần) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    (async () => {
-        const orgId = 1;
-        const eventId = new URLSearchParams(window.location.search).get('id');
+    (async function() {
+        const BASE_URL = "https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io";
 
-        // Lấy chi tiết event
-        const res = await fetch(`/events/${eventId}`);
-        if (!res.ok) {
-            document.querySelector('.container').innerHTML = '<div class="alert alert-danger">Không tìm thấy sự kiện.</div>';
-            return;
-        }
-        const e = await res.json();
-
-        if (e.organizationId != orgId) {
-            document.body.innerHTML = '<div class="alert alert-danger">Bạn không có quyền truy cập.</div>';
+        // Lấy eventId từ query string
+        const params = new URLSearchParams(window.location.search);
+        const eventId = params.get("id");
+        if (!eventId) {
+            alert("Không tìm thấy ID sự kiện.");
+            window.location.href = "manage-events.html";
             return;
         }
 
-        // Hiển thị title
-        document.getElementById('evtTitle').textContent = e.title;
+        // Lấy token từ localStorage (nếu có)
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            alert("Bạn chưa đăng nhập hoặc phiên đã hết hạn.");
+            window.location.href = "login-page.html";
+            return;
+        }
 
-        // Điền form
-        document.getElementById('eventId').value = e.id;
-        const form = document.getElementById('editEvtForm');
-        form.title.value = e.title;
-        form.description.value = e.description;
-        form.location.value = e.location;
-        form.startTime.value = e.startTime;
-        form.endTime.value = e.endTime;
-        form.requiredSkills.value = e.requiredSkills.join(', ');
-        form.maxParticipants.value = e.maxParticipants;
-        form.status.value = e.status;
+        // References
+        const loadingEl = document.getElementById("loading");
+        const staticInfoEl = document.getElementById("staticInfo");
+        const detailFormEl = document.getElementById("detailForm");
+        const registrationEl = document.getElementById("registrationList");
 
-        // Submit form
-        form.addEventListener('submit', async ev => {
-            ev.preventDefault();
-            const data = Object.fromEntries(new FormData(form));
-            data.requiredSkills = data.requiredSkills.split(',').map(s => s.trim());
-            await fetch(`/events/${eventId}`, {
-                method: 'PATCH',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
+        const titleStatic = document.getElementById("titleStatic");
+        const locationStatic = document.getElementById("locationStatic");
+        const timeStatic = document.getElementById("timeStatic");
+        const descriptionStatic = document.getElementById("descriptionStatic");
+        const skillsStatic = document.getElementById("skillsStatic");
+        const participantsStatic = document.getElementById("participantsStatic");
+        const maxParticipantsStatic = document.getElementById("maxParticipantsStatic");
+        const statusStatic = document.getElementById("statusStatic");
+        const btnEdit = document.getElementById("btnEdit");
+
+        const titleDetail = document.getElementById("titleDetail");
+        const locationDetail = document.getElementById("locationDetail");
+        const startTimeDetail = document.getElementById("startTimeDetail");
+        const endTimeDetail = document.getElementById("endTimeDetail");
+        const descriptionDetail = document.getElementById("descriptionDetail");
+        const skillsDetail = document.getElementById("skillsDetail");
+        const maxPartsDetail = document.getElementById("maxPartsDetail");
+        const statusDetail = document.getElementById("statusDetail");
+        const btnCancelDetail = document.getElementById("btnCancelDetail");
+        const eventDetailForm = document.getElementById("eventDetailForm");
+
+        let eventData = null;
+        let registrations = [];
+
+        // 1) Fetch event chi tiết
+        try {
+            const res = await fetch(`${BASE_URL}/mana-events/${eventId}`, {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}` }
             });
-            alert('Cập nhật thành công');
-            location.reload();
+            if (!res.ok) {
+                throw new Error(`Lỗi GET chi tiết: ${res.status}`);
+            }
+            eventData = await res.json();
+        } catch (err) {
+            console.error(err);
+            alert("Không thể tải thông tin sự kiện.");
+            window.location.href = "manage-events.html";
+            return;
+        }
+
+        // 2) Fetch danh sách registrations
+        try {
+            const regRes = await fetch(`${BASE_URL}/registrations/${eventId}`, {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (!regRes.ok) {
+                throw new Error(`Lỗi GET registrations: ${regRes.status}`);
+            }
+            registrations = await regRes.json();
+        } catch (err) {
+            console.error("Lỗi khi fetch registrations:", err);
+            registrations = [];
+        }
+
+        // 3) Hiển thị phần static info & registrations, ẩn spinner
+        loadingEl.classList.add("hidden");
+        staticInfoEl.classList.remove("hidden");
+        registrationEl.classList.remove("hidden");
+
+        // Fill dữ liệu event lên staticInfo
+        titleStatic.textContent = eventData.title;
+        locationStatic.textContent = eventData.location;
+        const start = new Date(eventData.startTime);
+        const end = new Date(eventData.endTime);
+        timeStatic.textContent =
+            `${start.toLocaleDateString("vi-VN", {
+                day: "2-digit", month: "2-digit", year: "numeric",
+                hour: "2-digit", minute: "2-digit"
+            })}` +
+            " – " +
+            `${end.toLocaleDateString("vi-VN", {
+                day: "2-digit", month: "2-digit", year: "numeric",
+                hour: "2-digit", minute: "2-digit"
+            })}`;
+        descriptionStatic.textContent = eventData.description;
+        skillsStatic.textContent = (eventData.requiredSkills || []).join(", ");
+        participantsStatic.textContent = eventData.participants || 0;
+        maxParticipantsStatic.textContent = eventData.maxParticipants;
+        statusStatic.textContent = eventData.status;
+
+        // Áp màu badge theo status
+        if (eventData.status === "PLANNED") {
+            statusStatic.classList.add("bg-info", "text-dark");
+        } else if (eventData.status === "ONGOING") {
+            statusStatic.classList.add("bg-success", "text-white");
+        } else if (eventData.status === "COMPLETED") {
+            statusStatic.classList.add("bg-secondary", "text-white");
+        } else {
+            statusStatic.classList.add("bg-danger", "text-white");
+        }
+
+        const eventCompleted = (eventData.status === "COMPLETED");
+
+        // Render danh sách registrations
+        renderRegistrations(registrations);
+
+        // 4) Nút “Chỉnh sửa”
+        btnEdit.addEventListener("click", () => {
+            staticInfoEl.classList.add("hidden");
+            detailFormEl.classList.remove("hidden");
+
+            // Điền dữ liệu vào form
+            titleDetail.value = eventData.title;
+            locationDetail.value = eventData.location;
+            startTimeDetail.value = new Date(eventData.startTime).toISOString().slice(0, 16);
+            endTimeDetail.value = new Date(eventData.endTime).toISOString().slice(0, 16);
+            descriptionDetail.value = eventData.description;
+            skillsDetail.value = (eventData.requiredSkills || []).join(", ");
+            maxPartsDetail.value = eventData.maxParticipants;
+            statusDetail.value = eventData.status;
         });
 
-        // Hiển thị list regs
-        const regs = await fetch(`/registrations?eventId=` + eventId + `&status=CONFIRMED`).then(r => r.json());
-        const list = document.getElementById('regList');
-        if (!regs.length) {
-            list.innerHTML = '<li class="list-group-item">Chưa có đăng ký nào.</li>';
-        } else {
-            regs.forEach(r => {
-                list.innerHTML += `<li class="list-group-item">Volunteer ${r.volunteerId} – ${new Date(r.registrationDate).toLocaleDateString('vi-VN')}</li>`;
-            });
+        // 5) Nút “Hủy”
+        btnCancelDetail.addEventListener("click", () => {
+            detailFormEl.classList.add("hidden");
+            staticInfoEl.classList.remove("hidden");
+        });
+
+        // 6) Submit form → PUT /mana-events/{eventId}
+        eventDetailForm.addEventListener("submit", async (ev) => {
+            ev.preventDefault();
+
+            const updatedData = {
+                title: titleDetail.value.trim(),
+                description: descriptionDetail.value.trim(),
+                location: locationDetail.value.trim(),
+                startTime: new Date(startTimeDetail.value).toISOString(),
+                endTime: new Date(endTimeDetail.value).toISOString(),
+                requiredSkills: skillsDetail.value
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter((s) => s.length > 0),
+                maxParticipants: parseInt(maxPartsDetail.value, 10),
+                status: statusDetail.value,
+                participants: eventData.participants || 0
+            };
+
+            try {
+                const resPut = await fetch(`${BASE_URL}/mana-events/${eventId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updatedData)
+                });
+                if (!resPut.ok) {
+                    throw new Error(`PUT thất bại: ${resPut.status}`);
+                }
+                alert("Cập nhật thành công!");
+                // Cập nhật lại eventData và staticInfo
+                Object.assign(eventData, updatedData);
+
+                titleStatic.textContent = updatedData.title;
+                locationStatic.textContent = updatedData.location;
+                const s = new Date(updatedData.startTime);
+                const e = new Date(updatedData.endTime);
+                timeStatic.textContent =
+                    `${s.toLocaleDateString("vi-VN", {
+                        day: "2-digit", month: "2-digit", year: "numeric",
+                        hour: "2-digit", minute: "2-digit"
+                    })}` +
+                    " – " +
+                    `${e.toLocaleDateString("vi-VN", {
+                        day: "2-digit", month: "2-digit", year: "numeric",
+                        hour: "2-digit", minute: "2-digit"
+                    })}`;
+                descriptionStatic.textContent = updatedData.description;
+                skillsStatic.textContent = updatedData.requiredSkills.join(", ");
+                maxParticipantsStatic.textContent = updatedData.maxParticipants;
+                statusStatic.textContent = updatedData.status;
+                // Cập lại màu badge
+                statusStatic.className = "badge";
+                if (updatedData.status === "PLANNED") {
+                    statusStatic.classList.add("bg-info", "text-dark");
+                } else if (updatedData.status === "ONGOING") {
+                    statusStatic.classList.add("bg-success", "text-white");
+                } else if (updatedData.status === "COMPLETED") {
+                    statusStatic.classList.add("bg-secondary", "text-white");
+                } else {
+                    statusStatic.classList.add("bg-danger", "text-white");
+                }
+
+                detailFormEl.classList.add("hidden");
+                staticInfoEl.classList.remove("hidden");
+            } catch (err) {
+                console.error(err);
+                alert("Cập nhật thất bại. Vui lòng thử lại.");
+            }
+        });
+
+        // ========== Phần “Danh sách đăng ký” ==========
+
+        // Hàm PATCH /registrations/{regId}
+        async function updateRegistrationStatus(
+            regId,
+            volunteerId,
+            newStatus,
+            statusEl,
+            approveBtn,
+            rejectBtn,
+            rateBtn
+        ) {
+            try {
+                const resPatch = await fetch(`${BASE_URL}/registrations/${regId}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if (!resPatch.ok) {
+                    throw new Error(`PATCH thất bại: ${resPatch.status}`);
+                }
+                // Cập nhật giao diện
+                statusEl.innerHTML = `<strong>Status:</strong> ${newStatus}`;
+                approveBtn.remove();
+                rejectBtn.remove();
+                // Nếu event đã COMPLETED, hiển thị nút Rate
+                if (eventCompleted) {
+                    rateBtn.style.display = "inline-block";
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Không thể cập nhật đăng ký. Vui lòng thử lại.");
+                approveBtn.disabled = false;
+                rejectBtn.disabled = false;
+            }
         }
 
+        // Hàm POST rating cho volunteer (giữ nguyên prompt)
+        async function postVolunteerRating(volunteerId) {
+            const ratingValue = prompt("Nhập điểm đánh giá cho tình nguyện viên (0.0 – 5.0):");
+            if (ratingValue === null) return;
+            const parsed = parseFloat(ratingValue);
+            if (isNaN(parsed) || parsed < 0 || parsed > 5) {
+                alert("Giá trị không hợp lệ. Nhập 0.0 – 5.0.");
+                return;
+            }
+            try {
+                const res = await fetch(`${BASE_URL}/volunteers/${volunteerId}/rating`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ rating: parsed })
+                });
+                if (!res.ok) {
+                    throw new Error(`POST rating thất bại: ${res.status}`);
+                }
+                alert("Đã gửi đánh giá thành công!");
+            } catch (err) {
+                console.error(err);
+                alert("Không thể gửi đánh giá. Vui lòng thử lại.");
+            }
+        }
+
+        // Hàm render danh sách đăng ký
+        function renderRegistrations(list) {
+            registrationEl.innerHTML = ""; // reset
+
+            if (!Array.isArray(list) || list.length === 0) {
+                registrationEl.innerHTML = `<p class="text-center text-muted">Chưa có người đăng ký.</p>`;
+                return;
+            }
+
+            list.forEach((r) => {
+                const card = document.createElement("div");
+                card.className = "registration-card p-3 mb-3";
+
+                const info = document.createElement("div");
+                info.className = "info mb-2";
+
+                const nameEl = document.createElement("div");
+                nameEl.innerHTML = `<strong>Tên:</strong> ${r.volunteerName}`;
+
+                const dateEl = document.createElement("div");
+                dateEl.innerHTML = `<strong>Ngày đăng ký:</strong> ${new Date(
+                    r.registrationDate
+                ).toLocaleDateString("vi-VN")}`;
+
+                const statusEl = document.createElement("div");
+                statusEl.innerHTML = `<strong>Status:</strong> ${r.status}`;
+
+                const skillsEl = document.createElement("div");
+                skillsEl.innerHTML = `<strong>Skills:</strong> ${(
+                    r.skills || []
+                ).join(", ")}`;
+
+                info.appendChild(nameEl);
+                info.appendChild(dateEl);
+                info.appendChild(statusEl);
+                info.appendChild(skillsEl);
+
+                const actionArea = document.createElement("div");
+                actionArea.className = "d-flex gap-2";
+
+                const btnApprove = document.createElement("button");
+                btnApprove.className = "btn-approve btn btn-success btn-sm";
+                btnApprove.textContent = "Duyệt";
+
+                const btnReject = document.createElement("button");
+                btnReject.className = "btn-reject btn btn-outline-danger btn-sm";
+                btnReject.textContent = "Không duyệt";
+
+                const btnRate = document.createElement("button");
+                btnRate.className = "btn-rate btn btn-warning btn-sm";
+                btnRate.textContent = "Đánh giá";
+                btnRate.style.display = "none";
+
+                // Nếu event COMPLETE và đăng ký đã CONFIRMED/NO_SHOW → show Rate
+                if (
+                    eventCompleted &&
+                    (r.status === "CONFIRMED" || r.status === "NO_SHOW")
+                ) {
+                    btnRate.style.display = "inline-block";
+                }
+
+                if (r.status === "REGISTERED") {
+                    actionArea.appendChild(btnApprove);
+                    actionArea.appendChild(btnReject);
+                } else {
+                    if (eventCompleted) {
+                        actionArea.appendChild(btnRate);
+                    }
+                }
+
+                btnApprove.addEventListener("click", () => {
+                    btnApprove.disabled = true;
+                    btnReject.disabled = true;
+                    updateRegistrationStatus(
+                        r.id,
+                        r.volunteerId,
+                        "CONFIRMED",
+                        statusEl,
+                        btnApprove,
+                        btnReject,
+                        btnRate
+                    );
+                });
+                btnReject.addEventListener("click", () => {
+                    btnApprove.disabled = true;
+                    btnReject.disabled = true;
+                    updateRegistrationStatus(
+                        r.id,
+                        r.volunteerId,
+                        "NO_SHOW",
+                        statusEl,
+                        btnApprove,
+                        btnReject,
+                        btnRate
+                    );
+                });
+
+                btnRate.addEventListener("click", () => {
+                    postVolunteerRating(r.volunteerId);
+                });
+
+                card.appendChild(info);
+                card.appendChild(actionArea);
+                registrationEl.appendChild(card);
+            });
+        }
     })();
 </script>
-<script src="auth.js"></script>
 </body>
 </html>
