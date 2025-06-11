@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý tài khoản</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-role="ADMIN">
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand admin" href="admin-approve-accounts.html">Admin</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="admin-approve-accounts.html">Duyệt tài khoản</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin-approve-requests.html">Duyệt yêu cầu</a></li>
+        <li class="nav-item"><a class="nav-link active" href="admin-manage-users.html">Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin-stats.html">Thống kê</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin-reports.html">Báo cáo</a></li>
+      </ul>
+    </div>
+    <a class="nav-link" href="#" id="btnLogout">
+      <span class="material-symbols-outlined">logout</span>
+    </a>
+  </div>
+</nav>
+
+<div class="container my-4">
+  <h2 class="mb-4 text-center">Quản lý tài khoản</h2>
+  <table class="table table-striped align-middle">
+    <thead>
+    <tr>
+      <th>Tên</th>
+      <th>Role</th>
+      <th>Status</th>
+      <th>Hoạt động (ngày)</th>
+      <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody id="user-table-body">
+
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="auth.js"></script>
+<script>
+  const token    = localStorage.getItem('accessToken');
+  const apiBase  = 'https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/admin/accounts';
+  const tbody    = document.getElementById('user-table-body');
+
+  document.addEventListener('DOMContentLoaded', loadUsers);
+
+  async function loadUsers() {
+    try {
+      const res = await fetch(apiBase, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error(res.status);
+      const users = await res.json();
+      tbody.innerHTML = users.map(rowHtml).join('');
+      bindActions();
+    } catch (e) {
+      console.error('Lỗi tải người dùng:', e);
+    }
+  }
+
+  function rowHtml(u) {
+    const created = new Date(u.createdDate);
+    const now     = new Date();
+    const days    = Math.floor((now - created) / 86400000);
+    const badgeClass = u.status === 'ACTIVE' ? 'bg-success'
+            : u.status === 'BLOCKED' ? 'bg-danger'
+                    : 'bg-secondary';
+    const action = u.status === 'ACTIVE' ? 'Chặn'
+            : u.status === 'BLOCKED' ? 'Bỏ chặn'
+                    : '';
+    const btnClass = u.status === 'ACTIVE'
+            ? 'btn-outline-danger' : 'btn-success';
+    return `
+      <tr data-id="${u.id}">
+        <td>${u.username}</td>
+        <td>${u.accountType}</td>
+        <td><span class="badge ${badgeClass}">${u.status}</span></td>
+        <td>${days}</td>
+        <td>
+          ${action
+            ? `<button class="btn ${btnClass} btn-sm btn-toggle">${action}</button>`
+            : ''}
+        </td>
+      </tr>`;
+  }
+
+  function bindActions() {
+    document.querySelectorAll('.btn-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tr     = btn.closest('tr');
+        const id     = tr.dataset.id;
+        const status = btn.textContent === 'Chặn' ? 'BLOCKED' : 'ACTIVE';
+        updateStatus(id, status, tr);
+      });
+    });
+  }
+
+  async function updateStatus(id, status, rowEl) {
+    try {
+      const res = await fetch(`${apiBase}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) throw new Error(res.status);
+      // cập nhật giao diện: đổi badge và button
+      const updated = await res.json();
+      const badge   = rowEl.querySelector('span.badge');
+      const btn     = rowEl.querySelector('button.btn-toggle');
+      badge.textContent = updated.status;
+      badge.className   = `badge ${updated.status === 'ACTIVE' ? 'bg-success' : 'bg-danger'}`;
+      if (btn) {
+        btn.textContent = updated.status === 'ACTIVE' ? 'Chặn' : 'Bỏ chặn';
+        btn.className   = `btn ${updated.status === 'ACTIVE' ? 'btn-outline-danger' : 'btn-success'} btn-sm btn-toggle`;
+        bindActions(); // gán lại sự kiện
+      }
+    } catch (e) {
+      console.error(`Lỗi cập nhật ${id}:`, e);
+    }
+  }
+</script>
+</body>
+</html>

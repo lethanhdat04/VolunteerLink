@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Recipient</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body data-role="RECIPIENT">
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand recipient" href="dashboard-recipient.html">Recipient</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="dashboard-recipient.html">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="requests-recipient.html">Yêu cầu trợ giúp</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="recipient-profile.html">Hồ sơ</a>
+                </li>
+            </ul>
+        </div>
+        <a class="nav-link" href="#" id="btnLogout">
+            <span class="material-symbols-outlined">logout</span>
+        </a>
+    </div>
+</nav>
+
+<div class="home-image">
+    <img src="images/home.jpg" alt="Banner" class="img-fluid w-100 h-100">
+    <div class="overlay"></div>
+</div>
+
+<div class="container my-4">
+    <!-- Phần Xin chào, [Tên Recipient] -->
+    <h2 class="text-center mb-4">Xin chào, <span id="recipientName">...</span></h2>
+    <div class="row g-4">
+        <!-- Tổng số yêu cầu -->
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h6>Tổng số yêu cầu</h6>
+                <h3 id="totalRequests">0</h3>
+            </div>
+        </div>
+        <!-- Yêu cầu đang xử lý -->
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h6>Yêu cầu đang xử lý</h6>
+                <h3 id="processingRequests">0</h3>
+            </div>
+        </div>
+        <!-- Yêu cầu đã hoàn thành -->
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h6>Yêu cầu đã hoàn thành</h6>
+                <h3 id="completedRequests">0</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            alert('Bạn chưa đăng nhập hoặc phiên đã hết hạn.');
+            return;
+        }
+
+        // 1) Lấy thông tin Recipient (GET /recipientinf)
+        try {
+            const resInfo = await fetch('https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/recipientinf', {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (resInfo.ok) {
+                const dataInfo = await resInfo.json();
+                document.getElementById('recipientName').textContent = dataInfo.fullname || dataInfo.username;
+            } else {
+                console.error('Lỗi khi lấy thông tin recipient:', resInfo.status);
+            }
+        } catch (err) {
+            console.error('Không thể kết nối API /recipientinf:', err);
+        }
+
+        // 2) Lấy số liệu thống kê (GET /requests/statistics)
+        try {
+            const resStats = await fetch('https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/statistics', {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (resStats.ok) {
+                const stats = await resStats.json();
+                // Giả sử API trả về { totalRequests, completedRequests }
+                const total = stats.totalRequests || 0;
+                const completed = stats.completedRequests || 0;
+                const processing = total - completed;
+                document.getElementById('totalRequests').textContent = total;
+                document.getElementById('completedRequests').textContent = completed;
+                document.getElementById('processingRequests').textContent = processing >= 0 ? processing : 0;
+            } else {
+                console.error('Lỗi khi lấy thống kê:', resStats.status);
+            }
+        } catch (err) {
+            console.error('Không thể kết nối API /requests/statistics:', err);
+        }
+    });
+</script>
+<script src="auth.js"></script>
+</body>
+</html>
