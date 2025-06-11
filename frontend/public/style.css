@@ -97,7 +97,9 @@ body {
 }
 /* Logo “Volunteer” / “Organization” */
 .volunteer,
-.organization {
+.organization,
+.recipient,
+.admin{
     color: #fff !important;
     position: absolute;
     top: 45%;
@@ -109,6 +111,11 @@ body {
 }
 .volunteer { margin-left: 5rem; }
 .organization { margin-left: 6.5rem; }
+.recipient {
+    margin-left: 4.5rem;
+    margin-top: 0.1rem;
+}
+.admin {margin-left: 4.5rem;}
 
 /* Link trong navbar */
 .nav-link {
@@ -463,4 +470,189 @@ textarea {
     color: rgb(23, 236, 33) !important;
 }
 
+/* ================== Quản lý sự kiện (manage-events.html) ================== */
+
+/* Ẩn lớp hidden */
+.hidden {
+    display: none !important;
+}
+
+/* Phần form tạo / sửa sự kiện */
+.form-section {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+/* Khi con trỏ hover vào td chứa tiêu đề */
+.pointer {
+    cursor: pointer;
+}
+
+/* Bảng cho phép cuộn ngang nếu nội dung dài */
+.table-wrap {
+    overflow-x: auto;
+}
+
+/* Các button nhỏ */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* ================== Kết thúc phần manage-events ================== */
+
+/* ================== CSS CHO TRANG org-event-detail ================== */
+
+/* Ẩn lớp hidden (dùng chung cho cả trang) */
+.hidden {
+    display: none !important;
+}
+
+/* Container chính của trang detail */
+#detailContainer {
+    max-width: 900px !important;
+    margin: 2rem auto !important;
+    background-color: #1e1e1e !important;
+    border: 1px solid #333 !important;
+    border-radius: 8px !important;
+    padding: 2rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+    color: #e0e0e0 !important;
+}
+
+/* Spinner loading ở giữa */
+#detailContainer #loading {
+    margin-top: 2rem !important;
+    /* đã mặc định hiển thị, JS sẽ thêm .hidden nếu cần */
+}
+
+/* --- CSS ĐƠN GIẢN CHO PHẦN TĨNH VÀ FORM --- */
+
+/* Ẩn ban đầu phần staticInfo và detailForm */
+.hidden {
+    display: none !important;
+}
+
+/* Container chính */
+#detailContainer {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Nút “Chỉnh sửa” */
+#btnEdit {
+    background-color: #ffb300 !important;
+    color: #1e1e1e !important;
+    border: none;
+    cursor: pointer;
+    position: relative; /* để z-index có tác dụng */
+    z-index: 1000;
+    pointer-events: auto;
+}
+#btnEdit:hover {
+    opacity: 0.9;
+}
+
+/* Form chỉnh sửa: nền tối, chữ sáng */
+#detailForm .form-control,
+#detailForm .form-select {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border: 1px solid #555;
+}
+#detailForm .form-control:focus,
+#detailForm .form-select:focus {
+    border-color: #777;
+    box-shadow: 0 0 0 0.2rem rgba(255, 179, 0, 0.25);
+}
+#detailForm button[type="submit"] {
+    background-color: #28a745 !important;
+    border: none;
+    color: #fff !important;
+}
+#detailForm button[type="button"] {
+    background-color: #444 !important;
+    border: none;
+    color: #e0e0e0 !important;
+}
+
+/* ================== PHẦN DANH SÁCH ĐĂNG KÝ ================== */
+#registrationList {
+    margin-top: 2rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    /* ẩn mặc định, JS sẽ remove .hidden */
+}
+
+/* Mỗi card của một tình nguyện viên đăng ký */
+.registration-card {
+    background-color: #2c2c2c !important;
+    border: 1px solid #444 !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    color: #e0e0e0 !important;
+}
+.registration-card .info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+}
+.registration-card .info div {
+    color: #e0e0e0 !important;
+    font-size: 0.95rem !important;
+}
+
+/* Nút “Duyệt” / “Không duyệt” */
+.registration-card .btn-approve,
+.registration-card .btn-reject {
+    min-width: 100px;
+    margin-left: 0.5rem !important;
+}
+.btn-approve {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: #fff !important;
+}
+.btn-reject {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #fff !important;
+}
+.btn-approve:disabled,
+.btn-reject:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+}
+
+/* Nút “Đánh giá” */
+.btn-rate {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #1e1e1e !important;
+    margin-left: 0.5rem !important;
+}
+.btn-rate.disabled,
+.btn-rate[disabled] {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+}
+
+/* Khi hover lên card */
+.registration-card:hover {
+    background-color: #333 !important;
+}
+
+/* ================== KẾT THÚC PHẦN org-event-detail ================== */
 

@@ -22,11 +22,10 @@
                 window.location.href = '/dashboard-organization.html';
                 break;
             case 'ADMIN':
-                window.location.href = '/admin-dashboard.html';
+                window.location.href = '/admin-approve-accounts.html';
                 break;
             case 'RECIPIENT':
-                // Nếu có trang dành riêng cho Recipient, thay đường dẫn tương ứng
-                window.location.href = '/dashboard.html';
+                window.location.href = '/dashboard-recipient.html';
                 break;
             default:
                 window.location.href = '/login-page.html';

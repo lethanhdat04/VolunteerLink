@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Open Sans", sans-serif;
+        }
+        html {
+            font-size: 11px;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: 100%;
+            background: url("images/login.jpg"), #000;
+            background-size: 120%;
+            background-position: right center;
+            transition: background-position 1s ease;
+        }
+        .top {
+            display: flex;
+            height: 10%;
+            width: 100vw;
+            justify-content: right;
+            align-items: center;
+            padding-right: 50px;
+            position: fixed;
+            z-index: 100;
+        }
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .page {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: left 1s ease;
+        }
+        #page-login {
+            left: 0;
+            perspective: 1000px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #page-about-us { left: -100%; }
+        #page-service  { left: -200%; }
+        #page-address  { left: -300%; }
+
+        .wrapper {
+            width: 400px;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        a {
+            text-decoration: none;
+        }
+        .btn {
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 20px;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+        .border_btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: 0.3s ease;
+            border-radius: 5px;
+        }
+        .border_btn:hover {
+            background-color: white;
+            color: black;
+        }
+        .input-field {
+            position: relative;
+            border-bottom: 2px solid #ccc;
+            margin: 15px 0;
+        }
+        .input-field label {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 16px;
+            pointer-events: none;
+            transition: 0.15s ease;
+        }
+        .input-field input {
+            width: 100%;
+            height: 40px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #fff;
+        }
+        .input-field input:focus ~ label,
+        .input-field input:valid ~ label {
+            font-size: 0.8rem;
+            top: 10px;
+            transform: translateY(-120%);
+        }
+        .forget {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 25px 0 35px 0;
+            color: #fff;
+        }
+        #remember {
+            accent-color: #fff;
+        }
+        .forget label {
+            display: flex;
+            align-items: center;
+        }
+        .forget label p {
+            margin-left: 8px;
+        }
+        button {
+            background: #fff;
+            color: #000;
+            font-weight: 600;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 16px;
+            border: 2px solid transparent;
+            transition: 0.3s ease;
+        }
+        button:hover {
+            color: #fff;
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .register {
+            text-align: center;
+            margin-top: 30px;
+            color: #fff;
+        }
+        .form-container {
+            width: 350px;
+            height: 500px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .login, .signup {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+            backface-visibility: hidden;
+        }
+        .signup {
+            transform: rotateY(180deg);
+        }
+        .form-container.flipped {
+            transform: rotateY(180deg);
+        }
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Style cho thông báo login */
+        .message {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .message.error {
+            color: #e74c3c;
+        }
+        .message.success {
+            color: #2ecc71;
+        }
+
+        .link{
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="top">
+    <a href="#" class="btn" id="btn-4" onclick="goToPage(4)">Address</a>
+    <a href="#" class="btn" id="btn-3" onclick="goToPage(3)">Services</a>
+    <a href="#" class="btn" id="btn-2" onclick="goToPage(2)">About Us</a>
+    <a href="#" class="btn border_btn" id="btn-1" onclick="goToPage(1)">Login</a>
+</div>
+
+<div class="container">
+    <div class="page" id="page-login">
+        <div class="form-container">
+            <!-- FORM LOGIN -->
+            <form id="loginForm" action="#" class="login">
+                <h2>Login</h2>
+                <div class="input-field">
+                    <input type="text" id="username" name="username" required>
+                    <label>Enter your email</label>
+                </div>
+                <div class="input-field">
+                    <input type="password" id="password" name="password" required>
+                    <label>Enter your password</label>
+                </div>
+                <div class="forget">
+                    <label for="remember">
+                        <input type="checkbox" id="remember">
+                        <p>Remember me</p>
+                    </label>
+                    <a href="#" class="link">Forgot password?</a>
+                </div>
+                <button type="submit">Log In</button>
+                <div id="loginMessage" class="message"></div>
+                <div class="register">
+                    <p>Don't have an account? <a href="#" onclick="flipCard()" class="link">Register</a></p>
+                </div>
+            </form>
+
+            <!-- FORM SIGNUP (giữ nguyên như cũ) -->
+            <form action="#" class="signup">
+                <h2>Signup</h2>
+                <div class="input-field">
+                    <input type="text" required>
+                    <label>Enter your name</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" required>
+                    <label>Enter your emails</label>
+                </div>
+                <div class="input-field">
+                    <input type="number" required>
+                    <label>Enter your phone</label>
+                </div>
+                <div class="input-field">
+                    <input type="password" required>
+                    <label>Enter your password</label>
+                </div>
+                <button type="submit">Sign Up</button>
+                <div class="register">
+                    <p>Already have an account? <a href="#" onclick="flipCard()" class="link">Log In</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="page" id="page-about-us" style="color: white">
+        <p>page 2</p>
+    </div>
+
+    <div class="page" id="page-service" style="color: white">
+        <p>page 3</p>
+    </div>
+
+    <div class="page" id="page-address" style="color: white">
+        <p>page 4</p>
+    </div>
+</div>
+
+<script>
+    function flipCard() {
+        document.querySelector('.form-container').classList.toggle('flipped');
+    }
+    function goToPage(pageNumber) {
+        if (pageNumber === 1) {
+            document.getElementById('page-login').style.left = '0';
+            document.getElementById('page-about-us').style.left = '-100%';
+            document.getElementById('page-service').style.left = '-200%';
+            document.getElementById('page-address').style.left = '-300%';
+            document.body.style.backgroundPosition = 'right center';
+            const listOfBtn = document.querySelectorAll(".btn");
+            listOfBtn.forEach((b) => b.classList.remove("border_btn"));
+            document.getElementById('btn-1').classList.add('border_btn');
+        } else if (pageNumber === 2) {
+            document.getElementById('page-login').style.left = '100%';
+            document.getElementById('page-about-us').style.left = '0';
+            document.getElementById('page-service').style.left = '-100%';
+            document.getElementById('page-address').style.left = '-200%';
+            document.body.style.backgroundPosition = '60% center';
+            const listOfBtn = document.querySelectorAll(".btn");
+            listOfBtn.forEach((b) => b.classList.remove("border_btn"));
+            document.getElementById('btn-2').classList.add('border_btn');
+        } else if (pageNumber === 3) {
+            document.getElementById('page-login').style.left = '200%';
+            document.getElementById('page-about-us').style.left = '100%';
+            document.getElementById('page-service').style.left = '0';
+            document.getElementById('page-address').style.left = '-100%';
+            document.body.style.backgroundPosition = '30% center';
+            const listOfBtn = document.querySelectorAll(".btn");
+            listOfBtn.forEach((b) => b.classList.remove("border_btn"));
+            document.getElementById('btn-3').classList.add('border_btn');
+        } else if (pageNumber === 4) {
+            document.getElementById('page-login').style.left = '300%';
+            document.getElementById('page-about-us').style.left = '200%';
+            document.getElementById('page-service').style.left = '100%';
+            document.getElementById('page-address').style.left = '0';
+            document.body.style.backgroundPosition = 'left center';
+            const listOfBtn = document.querySelectorAll(".btn");
+            listOfBtn.forEach((b) => b.classList.remove("border_btn"));
+            document.getElementById('btn-4').classList.add('border_btn');
+        }
+    }
+</script>
+
+<!-- Phần script bổ sung để xử lý LOGIN -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('loginForm');
+        const msgEl     = document.getElementById('loginMessage');
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            msgEl.textContent = '';
+            msgEl.className   = 'message';
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                msgEl.textContent = 'Vui lòng nhập đầy đủ.';
+                msgEl.classList.add('error');
+                return;
+            }
+
+            try {
+                // // 1) Gửi username/password đến backend tại /login
+                // const res = await fetch('https://d374e2a1-1234-5678-abcd-efghijklmnop.mock.pstmn.io/login', {
+                //     method: 'POST',
+                //     mode: 'cors',
+                //     headers: {
+                //         // 'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify({ username, password })
+                // });
+
+                const formBody = new URLSearchParams({
+                    username: username,
+                    password: password
+                });
+
+                // Lưu ý: Content-Type là 'application/x-www-form-urlencoded' (simple request)
+                const res = await fetch('https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formBody.toString()
+                });
+
+                if (!res.ok) {
+                    // Nếu API trả về lỗi (401, 400, ...), đọc message từ JSON hoặc statusText
+                    let errText = res.statusText;
+                    try {
+                        const errJson = await res.json();
+                        if (errJson.message) errText = errJson.message;
+                    } catch (_) {}
+                    alert('Đăng nhập thất bại: ' + errText);
+                    return;
+                }
+
+                // 2) Nhận về accessToken và role
+                const data = await res.json();
+                const { accessToken, role } = data;
+
+                // 3) Lưu vào localStorage
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('role', role);
+
+                // 4) Hiển thị thông báo tạm thời
+                msgEl.textContent = 'Đăng nhập thành công. Đang chuyển hướng…';
+                msgEl.classList.add('success');
+
+                // 5) Chuyển đến trang phù hợp dựa theo role
+                setTimeout(() => {
+                    if (role === 'ADMIN') {
+                        window.location.href = '/admin-dashboard.html';
+                    } else if (role === 'ORGANIZATION') {
+                        window.location.href = '/dashboard-organization.html';
+                    } else {
+                        window.location.href = '/dashboard.html';
+                    }
+                }, 700);
+
+            } catch (error) {
+                console.error('Lỗi khi gọi API /login:', error);
+                msgEl.textContent = 'Không thể kết nối sang server. Vui lòng thử lại.';
+                msgEl.classList.add('error');
+            }
+
+        });
+    });
+</script>
+</body>
+</html>
