@@ -7,8 +7,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        .badge-status { text-transform: uppercase; }
-        .request-card { cursor: pointer; }
+        .request-card {
+            position: relative;
+            cursor: pointer;
+            height: 100%;
+        }
+        .request-card .badge-status {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            text-transform: uppercase;
+        }
+        .request-card .badge-priority {
+            position: absolute;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body data-role="RECIPIENT">
@@ -17,20 +32,12 @@
         <a class="navbar-brand recipient" href="dashboard-recipient.html">Recipient</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="dashboard-recipient.html">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="requests-recipient.html">Yêu cầu trợ giúp</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="recipient-profile.html">Hồ sơ</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="dashboard-recipient.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link active" href="requests-recipient.html">Yêu cầu trợ giúp</a></li>
+                <li class="nav-item"><a class="nav-link" href="recipient-profile.html">Hồ sơ</a></li>
             </ul>
         </div>
-        <a class="nav-link" href="#" id="btnLogout">
-            <span class="material-symbols-outlined">logout</span>
-        </a>
+        <a class="nav-link" href="#" id="btnLogout"><span class="material-symbols-outlined">logout</span></a>
     </div>
 </nav>
 
@@ -50,9 +57,8 @@
             return;
         }
 
-        // GET /requestsRecipient
         try {
-            const res = await fetch('https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/requestsRecipient', {
+            const res = await fetch('http://localhost:8080/help-requests/recipient/9', {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -60,49 +66,56 @@
                 console.error('Lỗi khi lấy danh sách yêu cầu:', res.status);
                 return;
             }
-            const data = await res.json();
+            const data = await res.json(); // giả sử là mảng các help-request
             const container = document.getElementById('requestsRow');
 
             data.forEach(req => {
                 const col = document.createElement('div');
                 col.className = 'col-md-6 mb-4';
                 col.innerHTML = `
-                    <div class="card p-3 h-100 request-card">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-title mb-0">${req.title}</h5>
-                            <span class="badge-status badge ${getBadgeClass(req.status)}">${req.status}</span>
-                        </div>
-                        <p class="mt-2 mb-1"><strong>Ngày tạo:</strong> ${formatDate(req.createdAt)}</p>
-                        <p class="mb-0">
-                            <strong>Volunteer:</strong> ${req.volunteerId && req.volunteerId !== 0
-                    ? (req.Namevolunteer || '–')
-                    : 'Chưa có'}
-                        </p>
-                    </div>
-                `;
-                // Chuyển hướng đến trang chi tiết khi double-click
+                <div class="card p-3 h-100 request-card">
+                    <h5 class="card-title">${req.title}</h5>
+                    <p class="mt-2 mb-1">${req.description}</p>
+                    <p class="mb-1"><strong>Bắt đầu:</strong> ${formatDateTime(req.startTime)}</p>
+                    <p class="mb-1"><strong>Kết thúc:</strong> ${formatDateTime(req.endTime)}</p>
+                    <span class="badge-status badge ${getStatusClass(req.status)}">${req.status}</span>
+                    <span class="badge-priority badge ${getPriorityClass(req.priority)}">${req.priority}</span>
+                </div>
+            `;
                 col.querySelector('.request-card').ondblclick = () => {
                     window.location.href = `help-recipient-detail.html?id=${encodeURIComponent(req.id)}`;
                 };
                 container.appendChild(col);
             });
         } catch (err) {
-            console.error('Không thể kết nối API /requestsRecipient:', err);
+            console.error('Không thể kết nối API:', err);
         }
 
-        function getBadgeClass(status) {
+        function getStatusClass(status) {
             switch(status) {
-                case 'PENDING': return 'bg-warning text-dark';
-                case 'ACCEPTED': return 'bg-primary text-white';
+                case 'PENDING':   return 'bg-warning text-dark';
+                case 'ACCEPTED':  return 'bg-primary text-white';
                 case 'COMPLETED': return 'bg-success text-white';
                 case 'CANCELLED': return 'bg-secondary text-white';
-                default: return 'bg-light text-dark';
+                default:          return 'bg-light text-dark';
             }
         }
 
-        function formatDate(iso) {
+        function getPriorityClass(priority) {
+            switch(priority) {
+                case 'HIGH':   return 'bg-danger text-white';
+                case 'MEDIUM': return 'bg-warning text-dark';
+                case 'LOW':    return 'bg-info text-white';
+                default:       return 'bg-light text-dark';
+            }
+        }
+
+        function formatDateTime(iso) {
             const d = new Date(iso);
-            return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+            return d.toLocaleString('vi-VN', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
         }
     })();
 </script>

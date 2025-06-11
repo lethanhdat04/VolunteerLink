@@ -1,42 +1,50 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Quản lý sự kiện</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-    />
-    <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-            rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css"/>
     <style>
-        /* Chỉ bổ sung một số style cơ bản cho manage-events */
-        .table-wrap {
-            overflow-x: auto;
-        }
-        .pointer {
-            cursor: pointer;
-        }
+        .table-wrap { overflow-x: auto; }
+        .pointer { cursor: pointer; }
+
+        /* Form tạo sự kiện nền đen */
         .form-section {
-            background-color: #f8f9fa;
+            background-color: #000 !important;
+            color: #fff;
             padding: 1.5rem;
-            border: 1px solid #ddd;
+            border: 1px solid #333;
             border-radius: 8px;
             margin-bottom: 2rem;
         }
-        .hidden {
-            display: none !important;
+        .form-section .form-control,
+        .form-section .form-select,
+        .form-section textarea {
+            background-color: #222;
+            color: #fff;
+            border-color: #444;
         }
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
+        .form-section .form-label {
+            color: #ddd;
         }
+        .form-section .form-text {
+            color: #aaa;
+        }
+
+        /* >>> Mới: placeholder phải tương phản rõ */
+        .form-section .form-control::placeholder,
+        .form-section textarea::placeholder {
+            /* Màu sáng, độ mờ 100% */
+            color: #bbb !important;
+            opacity: 1 !important;
+        }
+
+        .hidden { display: none !important; }
+        .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.875rem; }
     </style>
 </head>
-
 <body data-role="ORGANIZATION">
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
@@ -58,8 +66,7 @@
 
     <!-- Nút “Tạo sự kiện” -->
     <button id="btnShowCreate" class="btn btn-primary mb-3">
-        <span class="material-symbols-outlined align-middle">add_circle</span>
-        Tạo sự kiện mới
+        <span class="material-symbols-outlined align-middle">add_circle</span> Tạo sự kiện mới
     </button>
 
     <!-- Form Tạo Sự kiện (ẩn mặc định) -->
@@ -69,74 +76,31 @@
             <div class="row g-3">
                 <div class="col-md-6">
                     <label for="titleInput" class="form-label">Tiêu đề</label>
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="titleInput"
-                            placeholder="Ví dụ: Community Park Clean-Up"
-                            required
-                    />
+                    <input type="text" id="titleInput" class="form-control" placeholder="Ví dụ: Community Park Clean-Up" required/>
                 </div>
                 <div class="col-md-6">
                     <label for="locationInput" class="form-label">Địa điểm</label>
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="locationInput"
-                            placeholder="Ví dụ: Công viên Gia Định, TP.HCM"
-                            required
-                    />
+                    <input type="text" id="locationInput" class="form-control" placeholder="Ví dụ: Công viên Gia Định, TP.HCM" required/>
                 </div>
                 <div class="col-md-6">
                     <label for="startTimeInput" class="form-label">Thời gian bắt đầu</label>
-                    <input
-                            type="datetime-local"
-                            class="form-control"
-                            id="startTimeInput"
-                            required
-                    />
+                    <input type="datetime-local" id="startTimeInput" class="form-control" required/>
                 </div>
                 <div class="col-md-6">
                     <label for="endTimeInput" class="form-label">Thời gian kết thúc</label>
-                    <input
-                            type="datetime-local"
-                            class="form-control"
-                            id="endTimeInput"
-                            required
-                    />
+                    <input type="datetime-local" id="endTimeInput" class="form-control" required/>
                 </div>
                 <div class="col-12">
                     <label for="descriptionInput" class="form-label">Mô tả</label>
-                    <textarea
-                            class="form-control"
-                            id="descriptionInput"
-                            rows="2"
-                            placeholder="Nhập mô tả ngắn gọn về event…"
-                    ></textarea>
+                    <textarea id="descriptionInput" class="form-control" rows="2" placeholder="Nhập mô tả ngắn gọn về event…" required></textarea>
                 </div>
                 <div class="col-md-6">
-                    <label for="skillsInput" class="form-label">Required Skills (phân cách bởi dấu phẩy)</label>
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="skillsInput"
-                            placeholder="Ví dụ: Làm việc nhóm, Vận động"
-                    />
+                    <label for="maxPartsInput" class="form-label">Số tối đa người tham gia</label>
+                    <input type="number" id="maxPartsInput" class="form-control" min="1" placeholder="30" required/>
                 </div>
-                <div class="col-md-3">
-                    <label for="maxPartsInput" class="form-label">Max Participants</label>
-                    <input
-                            type="number"
-                            class="form-control"
-                            id="maxPartsInput"
-                            min="1"
-                            placeholder="30"
-                            required
-                    />
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <label for="statusSelect" class="form-label">Status</label>
-                    <select class="form-select" id="statusSelect" required>
+                    <select id="statusSelect" class="form-select" required>
                         <option value="PLANNED" selected>PLANNED</option>
                         <option value="ONGOING">ONGOING</option>
                         <option value="COMPLETED">COMPLETED</option>
@@ -146,12 +110,9 @@
             </div>
 
             <div class="mt-4 text-end">
-                <button type="button" class="btn btn-secondary me-2" id="btnCancelForm">
-                    Hủy
-                </button>
-                <button type="submit" class="btn btn-success" id="btnSubmitForm">
-                    <span class="material-symbols-outlined">add_circle</span>
-                    Tạo mới
+                <button type="button" id="btnCancelForm" class="btn btn-secondary me-2">Hủy</button>
+                <button type="submit" id="btnSubmitForm" class="btn btn-success">
+                    <span class="material-symbols-outlined">add_circle</span> Tạo mới
                 </button>
             </div>
         </form>
@@ -159,245 +120,147 @@
 
     <!-- Bảng danh sách sự kiện -->
     <div class="table-wrap">
-        <table class="table table-bordered table-hover align-middle" id="eventsTable">
+        <table class="table table-bordered table-hover align-middle">
             <thead class="table-dark">
             <tr>
-                <th style="width: 30%;">Tiêu đề</th>
-                <th style="width: 20%;">Thời gian</th>
-                <th style="width: 20%;">Participants / Max</th>
-                <th style="width: 15%;">Status</th>
-                <th style="width: 15%;">Hành động</th>
+                <th>Tiêu đề</th>
+                <th>Thời gian</th>
+                <th>Tham gia</th>
+                <th>Status</th>
+                <th>Hành động</th>
             </tr>
             </thead>
             <tbody id="eventsTbody">
-            <!-- Dữ liệu sẽ được JavaScript chèn vào tại đây -->
+            <!-- JS chèn vào -->
             </tbody>
         </table>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    (function () {
-        const BASE_URL = "https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io";
+    (function(){
+        const BASE = 'http://localhost:8080';
+        const ORG_ID = 1;
+        const token = localStorage.getItem('accessToken');
+        if (!token) { alert('Bạn chưa đăng nhập hoặc phiên hết hạn.'); return; }
 
-        // Lấy token đã lưu (giả sử bạn lưu khi login):
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-            alert("Bạn chưa đăng nhập hoặc phiên hết hạn. Vui lòng login lại.");
-            window.location.href = "login-page.html";
-            return;
-        }
+        const btnShowCreate   = document.getElementById('btnShowCreate');
+        const createForm      = document.getElementById('createForm');
+        const eventForm       = document.getElementById('eventForm');
+        const btnCancelForm   = document.getElementById('btnCancelForm');
+        const btnSubmitForm   = document.getElementById('btnSubmitForm');
+        const eventsTbody     = document.getElementById('eventsTbody');
 
-        // References đến các element
-        const btnShowCreate = document.getElementById("btnShowCreate");
-        const createForm = document.getElementById("createForm");
-        const eventForm = document.getElementById("eventForm");
-        const btnCancelForm = document.getElementById("btnCancelForm");
-        const btnSubmitForm = document.getElementById("btnSubmitForm");
-        const eventsTbody = document.getElementById("eventsTbody");
+        const inputTitle      = document.getElementById('titleInput');
+        const inputLocation   = document.getElementById('locationInput');
+        const inputStartTime  = document.getElementById('startTimeInput');
+        const inputEndTime    = document.getElementById('endTimeInput');
+        const inputDescription= document.getElementById('descriptionInput');
+        const inputMaxParts   = document.getElementById('maxPartsInput');
+        const selectStatus    = document.getElementById('statusSelect');
 
-        // Các input trong form
-        const inputTitle = document.getElementById("titleInput");
-        const inputLocation = document.getElementById("locationInput");
-        const inputStartTime = document.getElementById("startTimeInput");
-        const inputEndTime = document.getElementById("endTimeInput");
-        const inputDescription = document.getElementById("descriptionInput");
-        const inputSkills = document.getElementById("skillsInput");
-        const inputMaxParts = document.getElementById("maxPartsInput");
-        const selectStatus = document.getElementById("statusSelect");
+        function showForm(){ createForm.classList.remove('hidden'); eventForm.reset(); }
+        function hideForm(){ createForm.classList.add('hidden'); eventForm.reset(); }
 
-        // Ẩn/hiện form tạo sự kiện
-        function showCreateForm() {
-            createForm.classList.remove("hidden");
-            eventForm.reset();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-        function hideCreateForm() {
-            createForm.classList.add("hidden");
-            eventForm.reset();
-        }
-
-        // Fetch và render danh sách events
-        async function loadEvents() {
-            eventsTbody.innerHTML = `<tr><td colspan="5" class="text-center py-4">Đang tải…</td></tr>`;
+        async function loadEvents(){
+            eventsTbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Đang tải…</td></tr>';
             try {
-                const res = await fetch(`${BASE_URL}/mana-events`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                const res = await fetch(`${BASE}/events/organization/${ORG_ID}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-                if (!res.ok) throw new Error(`Lỗi khi load events: ${res.status}`);
-                const data = await res.json(); // mảng sự kiện
+                if (!res.ok) throw new Error(res.status);
+                const data = await res.json();
                 renderEvents(data);
-            } catch (err) {
-                console.error(err);
-                eventsTbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Không tải được dữ liệu.</td></tr>`;
+            } catch (e) {
+                console.error(e);
+                eventsTbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Không tải được dữ liệu.</td></tr>';
             }
         }
 
-        // Hiển thị các dòng event vào bảng
-        function renderEvents(events) {
-            if (!Array.isArray(events) || events.length === 0) {
-                eventsTbody.innerHTML = `<tr><td colspan="5" class="text-center">Chưa có sự kiện nào.</td></tr>`;
+        function renderEvents(events){
+            if (!Array.isArray(events) || events.length===0){
+                eventsTbody.innerHTML = '<tr><td colspan="5" class="text-center">Chưa có sự kiện nào.</td></tr>';
                 return;
             }
-
-            eventsTbody.innerHTML = ""; // reset
-            events.forEach((ev) => {
-                const tr = document.createElement("tr");
-
-                // 1. Tiêu đề (double-click để xem chi tiết)
-                const tdTitle = document.createElement("td");
+            eventsTbody.innerHTML = '';
+            events.forEach(ev => {
+                const tr = document.createElement('tr');
+                const tdTitle = document.createElement('td');
                 tdTitle.textContent = ev.title;
-                tdTitle.classList.add("pointer", "text-primary");
-                tdTitle.addEventListener("dblclick", () => {
-                    window.location.href = `org-event-detail.html?id=${ev.id}`;
-                });
+                tdTitle.classList.add('pointer','text-primary');
+                tdTitle.addEventListener('dblclick',()=> window.location.href=`org-event-detail.html?id=${ev.id}`);
                 tr.appendChild(tdTitle);
 
-                // 2. Thời gian (bắt đầu → kết thúc)
-                const start = new Date(ev.startTime);
-                const end = new Date(ev.endTime);
-                const timeString =
-                    `${start.toLocaleDateString("vi-VN", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    })}` +
-                    " – " +
-                    `${end.toLocaleDateString("vi-VN", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    })}`;
-                const tdTime = document.createElement("td");
-                tdTime.textContent = timeString;
+                const fmt = dt => new Date(dt).toLocaleString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+                const tdTime = document.createElement('td');
+                tdTime.textContent = `${fmt(ev.startTime)} – ${fmt(ev.endTime)}`;
                 tr.appendChild(tdTime);
 
-                // 3. Participants / MaxParticipants
-                const tdPart = document.createElement("td");
-                tdPart.textContent = `${ev.participants || 0} / ${ev.maxParticipants}`;
+                const tdPart = document.createElement('td');
+                tdPart.textContent = `${ev.participants} / ${ev.maxParticipants}`;
                 tr.appendChild(tdPart);
 
-                // 4. Status
-                const tdStatus = document.createElement("td");
+                const tdStatus = document.createElement('td');
                 tdStatus.textContent = ev.status;
-                if (ev.status === "PLANNED") {
-                    tdStatus.classList.add("text-primary");
-                } else if (ev.status === "ONGOING") {
-                    tdStatus.classList.add("text-success");
-                } else if (ev.status === "COMPLETED") {
-                    tdStatus.classList.add("text-secondary");
-                } else if (ev.status === "CANCELLED") {
-                    tdStatus.classList.add("text-danger");
-                }
                 tr.appendChild(tdStatus);
 
-                // 5. Hành động: Chỉ Delete
-                const tdAction = document.createElement("td");
-                // Xóa
-                const btnDelete = document.createElement("button");
-                btnDelete.className = "btn btn-sm btn-outline-danger";
-                btnDelete.innerHTML = `<span class="material-symbols-outlined align-middle">delete</span>`;
-                btnDelete.title = "Xóa sự kiện";
-                btnDelete.addEventListener("click", () => {
-                    if (confirm(`Bạn có chắc muốn xóa sự kiện "${ev.title}" không?`)) {
-                        deleteEvent(ev.id);
-                    }
-                });
-                tdAction.appendChild(btnDelete);
-
+                const tdAction = document.createElement('td');
+                const btnDel = document.createElement('button');
+                btnDel.className = 'btn btn-sm btn-outline-danger';
+                btnDel.innerHTML = '<span class="material-symbols-outlined">delete</span>';
+                btnDel.addEventListener('click', ()=> confirmDelete(ev.id,ev.title));
+                tdAction.appendChild(btnDel);
                 tr.appendChild(tdAction);
+
                 eventsTbody.appendChild(tr);
             });
         }
 
-        // Xóa event
-        async function deleteEvent(eventId) {
+        async function confirmDelete(id,title){
+            if (!confirm(`Xóa sự kiện "${title}"?`)) return;
             try {
-                const res = await fetch(`${BASE_URL}/mana-events/${eventId}`, {
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                if (!res.ok) throw new Error(`Xóa thất bại: ${res.status}`);
-                // Tải lại list
-                await loadEvents();
-            } catch (err) {
-                console.error(err);
-                alert("Xóa không thành công. Vui lòng thử lại.");
-            }
+                const res = await fetch(`${BASE}/events/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});
+                if (!res.ok) throw new Error(res.status);
+                loadEvents();
+            } catch (e) { console.error(e); alert('Xóa thất bại.'); }
         }
 
-        // Tạo mới event (chỉ POST, không PUT)
-        eventForm.addEventListener("submit", async (ev) => {
+        eventForm.addEventListener('submit',async ev=>{
             ev.preventDefault();
-
-            // Thu thập dữ liệu từ form
-            const data = {
+            const body = {
                 title: inputTitle.value.trim(),
                 description: inputDescription.value.trim(),
                 location: inputLocation.value.trim(),
                 startTime: new Date(inputStartTime.value).toISOString(),
                 endTime: new Date(inputEndTime.value).toISOString(),
-                requiredSkills: inputSkills.value
-                    .split(",")
-                    .map((s) => s.trim())
-                    .filter((s) => s.length > 0),
-                maxParticipants: parseInt(inputMaxParts.value, 10),
+                maxParticipants: parseInt(inputMaxParts.value,10),
                 status: selectStatus.value,
-                participants: 0
+                organizationId: ORG_ID
             };
-
             try {
                 btnSubmitForm.disabled = true;
-                btnSubmitForm.querySelector(".material-symbols-outlined").textContent = "add_circle";
-                btnSubmitForm.lastChild.textContent = " Đang tạo…";
-
-                const res = await fetch(`${BASE_URL}/mana-events`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(data),
+                const res = await fetch(`${BASE}/events/create`,{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+                    body: JSON.stringify(body)
                 });
-                if (!res.ok) {
-                    throw new Error(`POST thất bại: ${res.status}`);
-                }
-                // Sau khi thành công: hide form, reload list
-                hideCreateForm();
-                await loadEvents();
-            } catch (err) {
-                console.error(err);
-                alert("Tạo mới thất bại. Vui lòng thử lại.");
+                if (!res.ok) throw new Error(res.status);
+                hideForm();
+                loadEvents();
+            } catch (e) {
+                console.error(e);
+                alert('Tạo mới thất bại.');
             } finally {
                 btnSubmitForm.disabled = false;
-                btnSubmitForm.querySelector(".material-symbols-outlined").textContent = "add_circle";
-                btnSubmitForm.lastChild.textContent = " Tạo mới";
             }
         });
 
-        // Xử lý các nút
-        btnShowCreate.addEventListener("click", showCreateForm);
-        btnCancelForm.addEventListener("click", hideCreateForm);
+        btnShowCreate.addEventListener('click', showForm);
+        btnCancelForm.addEventListener('click', hideForm);
 
-        // Logout (nếu bạn có auth.js xử lý)
-        const btnLogout = document.getElementById("btnLogout");
-        btnLogout.addEventListener("click", () => {
-            localStorage.removeItem("accessToken");
-            window.location.href = "login-page.html";
-        });
-
-        // Khi load trang, gọi loadEvents()
         loadEvents();
     })();
 </script>
+<script src="auth.js"></script>
 </body>
 </html>

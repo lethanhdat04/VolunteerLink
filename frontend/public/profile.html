@@ -3,41 +3,24 @@
 <head>
     <meta charset="UTF-8" />
     <title>Hồ sơ cá nhân</title>
-    <!-- Nạp Bootstrap CSS trước -->
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-    />
-    <!-- Nạp Material Icons (nếu cần) -->
-    <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-            rel="stylesheet"
-    />
-    <!-- Nạp file style.css (đã được cập nhật phía dưới) -->
+    <!-- Nạp Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- Nạp Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <!-- Nạp file style.css -->
     <link rel="stylesheet" href="style.css" />
 </head>
 <body data-role="VOLUNTEER">
-<!-- Navbar cố định (giữ nguyên từ trước, CSS đã có trong style.css) -->
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
         <a class="navbar-brand volunteer" href="#">Volunteer</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="dashboard.html">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="events-list.html">Sự kiện phù hợp</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="help-requests.html">Yêu cầu trợ giúp</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="history.html">Lịch sử</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="profile.html">Hồ sơ</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="events-list.html">Sự kiện phù hợp</a></li>
+                <li class="nav-item"><a class="nav-link" href="help-requests.html">Yêu cầu trợ giúp</a></li>
+                <li class="nav-item"><a class="nav-link" href="history.html">Lịch sử</a></li>
+                <li class="nav-item"><a class="nav-link" href="profile.html">Hồ sơ</a></li>
             </ul>
         </div>
         <a class="nav-link" href="#" id="btnLogout">
@@ -49,303 +32,336 @@
 <div class="container my-5">
     <h2 class="profile-title text-center mb-5">Hồ sơ cá nhân</h2>
 
-    <!-- Spinner loading: hiển thị khi fetch chưa xong -->
+    <!-- Spinner loading -->
     <div id="loading" class="text-center py-5">
         <div class="spinner-border text-primary" role="status"></div>
         <p>Đang tải thông tin…</p>
     </div>
 
-    <!-- Phần nội dung profile (2 khung) -->
+    <!-- Nội dung chính -->
     <div id="profileContent" class="profile-wrapper" style="display: none;">
-        <!-- Khung trái: avatar + tên + role -->
         <div class="profile-left">
-            <img
-                    src="images/avatar.jpg"
-                    alt="Avatar"
-                    id="avatarImg"
-                    class="profile-avatar"
-            />
+            <img src="images/avatar.jpg" id="avatarImg" class="profile-avatar" alt="Avatar"/>
             <h3 id="fullNameDisplay" class="profile-name">–</h3>
             <span id="roleDisplay" class="profile-role">–</span>
         </div>
 
-        <!-- Khung phải: các thông tin tĩnh + nút "Cập nhật" -->
         <div class="profile-right">
-            <!-- BAN ĐẦU: hiển thị text tĩnh -->
+            <!-- Static info -->
             <div id="staticInfo">
                 <div class="row gx-4">
-                    <!-- Hàng 1: Tên đăng nhập + Email -->
                     <div class="col-md-6 mb-4">
-                        <label class="form-label text-secondary">Tên đăng nhập:</label>
-                        <div>
-                            <span id="staticUsername">–</span>
-                        </div>
+                        <label class="form-label text-secondary">Giờ hoạt động:</label>
+                        <div><span id="staticAvailableHours">–</span></div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Email:</label>
-                        <div>
-                            <span id="staticEmail">–</span>
-                        </div>
+                        <div><span id="staticEmail">–</span></div>
                     </div>
-
-                    <!-- Hàng 2: Họ và tên + Số điện thoại -->
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Họ và tên:</label>
-                        <div>
-                            <span id="staticFullName">–</span>
-                        </div>
+                        <div><span id="staticFullName">–</span></div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Số điện thoại:</label>
-                        <div>
-                            <span id="staticPhoneNumber">–</span>
-                        </div>
+                        <div><span id="staticPhoneNumber">–</span></div>
                     </div>
-
-                    <!-- Hàng 3: Địa chỉ + Kỹ năng -->
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Địa chỉ:</label>
-                        <div>
-                            <span id="staticAddress">–</span>
-                        </div>
+                        <div><span id="staticAddress">–</span></div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Kỹ năng:</label>
-                        <div>
-                            <span id="staticSkill">–</span>
-                        </div>
+                        <div><span id="staticSkill">–</span></div>
                     </div>
-
-                    <!-- Hàng 4: Đánh giá (rating) + Status -->
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Đánh giá:</label>
-                        <div>
-                            <span id="staticRating">–</span>
-                        </div>
+                        <div><span id="staticRating">–</span></div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Status:</label>
-                        <div>
-                            <span id="staticStatus" class="badge bg-success">–</span>
-                        </div>
+                        <div><span id="staticStatus" class="badge bg-success">–</span></div>
                     </div>
                 </div>
-
-                <!-- Nút Cập nhật: khi bấm sẽ ẩn staticInfo và hiện form -->
-                <button id="btnEdit" class="btn btn-warning w-100">
-                    Cập nhật
-                </button>
+                <button id="btnEdit" class="btn btn-warning w-100">Cập nhật</button>
             </div>
 
-            <!-- FORM edit: ẩn ban đầu, khi bấm "Cập nhật" mới show -->
+            <!-- Form chỉnh sửa -->
             <div id="editFormWrapper" class="profile-form-wrapper" style="display: none;">
                 <form id="profileForm" class="profile-form">
-                    <!-- …phần form giữ nguyên như cũ, không có input cho status… -->
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Họ và tên</label>
+                        <input type="text" id="fullName" class="form-control"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" class="form-control"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                        <input type="text" id="phoneNumber" class="form-control"/>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <input type="text" id="address" class="form-control" placeholder="Địa chỉ"/>
+                        <button type="button" id="btnCheckin" class="btn btn-outline-secondary">
+                            <span class="material-symbols-outlined">location_on</span>
+                        </button>
+                    </div>
+                    <input type="hidden" id="latitude"/>
+                    <input type="hidden" id="longitude"/>
+
+                    <!-- Kỹ năng: input + dropdown + tags -->
+                    <div class="mb-3">
+                        <label for="skillInput" class="form-label">Kỹ năng</label>
+                        <div class="input-group">
+                            <input type="text" id="skillInput" class="form-control" placeholder="Chọn kỹ năng…" readonly/>
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Thêm</button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="skillDropdown">
+                                <li><button class="dropdown-item" data-value="COOKING" type="button">Cooking</button></li>
+                                <li><button class="dropdown-item" data-value="TEACHING" type="button">Teaching</button></li>
+                                <li><button class="dropdown-item" data-value="CLEANING" type="button">Cleaning</button></li>
+                                <li><button class="dropdown-item" data-value="FIRST_AID" type="button">First Aid</button></li>
+                                <li><button class="dropdown-item" data-value="TRANSPORTATION" type="button">Transportation</button></li>
+                                <li><button class="dropdown-item" data-value="TRANSLATION" type="button">Translation</button></li>
+                                <li><button class="dropdown-item" data-value="IT_SUPPORT" type="button">IT Support</button></li>
+                                <li><button class="dropdown-item" data-value="COUNSELING" type="button">Counseling</button></li>
+                                <li><button class="dropdown-item" data-value="FUNDRAISING" type="button">Fundraising</button></li>
+                                <li><button class="dropdown-item" data-value="EVENT_ORGANIZATION" type="button">Event Organization</button></li>
+                                <li><button class="dropdown-item" data-value="CHILDCARE" type="button">Childcare</button></li>
+                                <li><button class="dropdown-item" data-value="ELDERLY_CARE" type="button">Elderly Care</button></li>
+                                <li><button class="dropdown-item" data-value="ENVIRONMENTAL_CLEANUP" type="button">Environmental Cleanup</button></li>
+                                <li><button class="dropdown-item" data-value="DISASTER_RELIEF" type="button">Disaster Relief</button></li>
+                                <li><button class="dropdown-item" data-value="COMMUNITY_OUTREACH" type="button">Community Outreach</button></li>
+                                <li><button class="dropdown-item" data-value="EDUCATION" type="button">Education</button></li>
+                                <li><button class="dropdown-item" data-value="HEALTHCARE" type="button">Healthcare</button></li>
+                                <li><button class="dropdown-item" data-value="EMERGENCY_RELIEF" type="button">Emergency Relief</button></li>
+                                <li><button class="dropdown-item" data-value="SOCIAL_WORK" type="button">Social Work</button></li>
+                                <li><button class="dropdown-item" data-value="COMMUNICATION" type="button">Communication</button></li>
+                                <li><button class="dropdown-item" data-value="LOGISTICS" type="button">Logistics</button></li>
+                            </ul>
+                        </div>
+                        <div id="skillTags" class="mt-2"></div>
+                        <div class="form-text">Nhấn × trên tag để xóa kỹ năng</div>
+                    </div>
+
+                    <div id="updateMessage" class="mb-3"></div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary me-2">Lưu</button>
+                        <button type="button" id="btnCancel" class="btn btn-secondary">Hủy</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap JS & logic fetch/PUT -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
-        const loadingEl = document.getElementById('loading');
-        const contentEl = document.getElementById('profileContent');
-        const avatarImg = document.getElementById('avatarImg');
-        const fullNameDisplay = document.getElementById('fullNameDisplay');
-        const roleDisplay = document.getElementById('roleDisplay');
+        const loadingEl            = document.getElementById('loading');
+        const contentEl            = document.getElementById('profileContent');
+        const avatarImg            = document.getElementById('avatarImg');
+        const fullNameDisplay      = document.getElementById('fullNameDisplay');
+        const roleDisplay          = document.getElementById('roleDisplay');
+        const staticAvailableHours = document.getElementById('staticAvailableHours');
+        const staticEmail          = document.getElementById('staticEmail');
+        const staticFullName       = document.getElementById('staticFullName');
+        const staticPhoneNumber    = document.getElementById('staticPhoneNumber');
+        const staticAddress        = document.getElementById('staticAddress');
+        const staticSkill          = document.getElementById('staticSkill');
+        const staticRating         = document.getElementById('staticRating');
+        const staticStatus         = document.getElementById('staticStatus');
 
-        // Các phần static
-        const staticUsername = document.getElementById('staticUsername');
-        const staticEmail = document.getElementById('staticEmail');
-        const staticFullName = document.getElementById('staticFullName');
-        const staticPhoneNumber = document.getElementById('staticPhoneNumber');
-        const staticAddress = document.getElementById('staticAddress');
-        const staticSkill = document.getElementById('staticSkill');
-        const staticRating = document.getElementById('staticRating');
-
-        // Form edit
-        const btnEdit = document.getElementById('btnEdit');
+        const btnEdit         = document.getElementById('btnEdit');
         const editFormWrapper = document.getElementById('editFormWrapper');
-        const staticInfo = document.getElementById('staticInfo');
-        const updateMsgEl = document.getElementById('updateMessage');
+        const staticInfo      = document.getElementById('staticInfo');
+        const updateMsgEl     = document.getElementById('updateMessage');
 
-        const usernameInput = document.getElementById('username');
-        const emailInput = document.getElementById('email');
-        const fullNameInput = document.getElementById('fullName');
+        const fullNameInput    = document.getElementById('fullName');
+        const emailInput       = document.getElementById('email');
         const phoneNumberInput = document.getElementById('phoneNumber');
-        const addressInput = document.getElementById('address');
-        const skillInput = document.getElementById('skill');
-        const ratingInput = document.getElementById('rating');
+        const addressInput     = document.getElementById('address');
+        const btnCheckin       = document.getElementById('btnCheckin');
+        const btnCancel        = document.getElementById('btnCancel');
+        const latitudeInput    = document.getElementById('latitude');
+        const longitudeInput   = document.getElementById('longitude');
+        const skillInput       = document.getElementById('skillInput');
+        const skillDropdown    = document.getElementById('skillDropdown');
+        const skillTags        = document.getElementById('skillTags');
 
-        // Lấy token
         const token = localStorage.getItem('accessToken');
         if (!token) {
             alert('Bạn chưa đăng nhập hoặc phiên đã hết hạn.');
             return;
         }
 
-        // 1. Fetch dữ liệu volunteer
-        let volunteerData;
+        let volunteerData, lat = null, lon = null;
+
+        // Fetch profile
         try {
-            const res = await fetch(
-                'https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/volunteerinf',
-                {
-                    method: 'GET',
-                    mode: 'cors',
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-            if (!res.ok) {
-                console.error('Lỗi khi lấy thông tin volunteer:', res.status);
-                alert('Không thể tải thông tin hồ sơ.');
-                return;
-            }
+            const res = await fetch('http://localhost:8080/volunteers/12', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error(res.status);
             volunteerData = await res.json();
         } catch (err) {
-            console.error('Lỗi kết nối khi lấy volunteer info:', err);
-            alert('Không thể kết nối tới server.');
+            console.error(err);
+            alert('Không thể tải thông tin hồ sơ.');
             return;
         } finally {
             loadingEl.style.display = 'none';
             contentEl.style.display = 'flex';
         }
 
-        // 2. Điền vào khung trái (avatar + tên + role)
-        avatarImg.src = volunteerData.avatarUrl || 'images/avatar.jpg';
-        fullNameDisplay.textContent = volunteerData.fullName || '';
-        roleDisplay.textContent = volunteerData.role || 'VOLUNTEER';
+        // Render static info
+        avatarImg.src                    = volunteerData.avatarUrl || 'images/avatar.jpg';
+        fullNameDisplay.textContent      = volunteerData.fullName;
+        roleDisplay.textContent          = "VOLUNTEER";
+        staticAvailableHours.textContent = volunteerData.availableHours ?? '–';
+        staticEmail.textContent          = volunteerData.email;
+        staticFullName.textContent       = volunteerData.fullName;
+        staticPhoneNumber.textContent    = volunteerData.phoneNumber;
+        staticAddress.textContent = volunteerData.address
+            ?? (volunteerData.latitude != null && volunteerData.longitude != null
+                ? `${volunteerData.latitude}, ${volunteerData.longitude}` : '–');
+        staticSkill.textContent          = (volunteerData.skills || []).join(', ');
+        staticRating.textContent         = volunteerData.rating ?? '–';
+        staticStatus.textContent         = volunteerData.status;
 
-        // 3. Điền text tĩnh vào staticInfo
-        staticUsername.textContent    = volunteerData.username || '';
-        staticEmail.textContent       = volunteerData.email || '';
-        staticFullName.textContent    = volunteerData.fullName || '';
-        staticPhoneNumber.textContent = volunteerData.phoneNumber || '';
-        staticAddress.textContent     = volunteerData.address || '';
-        staticSkill.textContent       = Array.isArray(volunteerData.skill)
-            ? volunteerData.skill.join(', ')
-            : '';
-        staticRating.textContent      = volunteerData.rating != null
-            ? volunteerData.rating
-            : '–';
+        // Helpers for skill tags
+        function renderTags() {
+            skillTags.innerHTML = '';
+            const arr = skillInput.value
+                .split(',').map(s => s.trim()).filter(s => s);
+            arr.forEach(name => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-secondary me-1';
+                badge.innerText = name;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn-close btn-close-white btn-sm ms-1';
+                btn.onclick = () => removeSkill(name);
+                badge.appendChild(btn);
+                skillTags.appendChild(badge);
+            });
+        }
+        function removeSkill(name) {
+            const arr = skillInput.value
+                .split(',').map(s => s.trim()).filter(s => s && s !== name);
+            skillInput.value = arr.join(', ');
+            renderTags();
+        }
 
-        // **Thêm dòng sau để điền `status` (Ví dụ: "ACTIVE")**
-        const staticStatus = document.getElementById('staticStatus');
-        staticStatus.textContent = volunteerData.status || '–';
-
-        // 4. Khi nhấn "Cập nhật", ẩn staticInfo, hiện form edit và fill dữ liệu
+        // Edit mode
         btnEdit.addEventListener('click', () => {
-            staticInfo.style.display = 'none';
+            staticInfo.style.display      = 'none';
             editFormWrapper.style.display = 'block';
 
-            // Điền giá trị vào form
-            usernameInput.value = volunteerData.username || '';
-            emailInput.value = volunteerData.email || '';
-            fullNameInput.value = volunteerData.fullName || '';
-            phoneNumberInput.value = volunteerData.phoneNumber || '';
-            addressInput.value = volunteerData.address || '';
-            skillInput.value = Array.isArray(volunteerData.skill)
-                ? volunteerData.skill.join(', ')
-                : '';
-            ratingInput.value =
-                volunteerData.rating != null ? volunteerData.rating : '';
+            fullNameInput.value    = volunteerData.fullName;
+            emailInput.value       = volunteerData.email;
+            phoneNumberInput.value = volunteerData.phoneNumber;
+            addressInput.value     = volunteerData.address || '';
+            lat = volunteerData.latitude;
+            lon = volunteerData.longitude;
+            latitudeInput.value    = lat;
+            longitudeInput.value   = lon;
+            skillInput.value       = (volunteerData.skills || []).join(', ');
+            renderTags();
         });
 
-        // 5. Nút Hủy: quay về chế độ static
-        document.getElementById('btnCancel').addEventListener('click', () => {
+        // Cancel
+        btnCancel.addEventListener('click', () => {
             editFormWrapper.style.display = 'none';
-            staticInfo.style.display = 'block';
-            updateMsgEl.innerHTML = '';
+            staticInfo.style.display      = 'block';
+            updateMsgEl.innerHTML         = '';
         });
 
-        // 6. Xử lý submit form (PUT /volunteerinf)
-        document.getElementById('profileForm').addEventListener('submit', async function (
-            ev
-        ) {
-            ev.preventDefault();
-            updateMsgEl.textContent = ''; // Xóa thông báo cũ
+        // Check-in
+        btnCheckin.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                alert('Trình duyệt không hỗ trợ vị trí.');
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(pos => {
+                lat = pos.coords.latitude;
+                lon = pos.coords.longitude;
+                latitudeInput.value  = lat;
+                longitudeInput.value = lon;
+                addressInput.value   = `${lat}, ${lon}`;
+            }, err => alert('Không lấy được vị trí: ' + err.message));
+        });
 
-            // Lấy lại giá trị từ form
-            const updatedEmail = emailInput.value.trim();
-            const updatedFullName = fullNameInput.value.trim();
-            const updatedPhoneNumber = phoneNumberInput.value.trim();
-            const updatedAddress = addressInput.value.trim();
-            const updatedSkill = skillInput.value
-                .split(',')
-                .map((s) => s.trim())
-                .filter((s) => s.length > 0);
+        // Add skill from dropdown
+        skillDropdown.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const v = item.dataset.value;
+                const arr = skillInput.value
+                    ? skillInput.value.split(',').map(s => s.trim())
+                    : [];
+                if (!arr.includes(v)) {
+                    arr.push(v);
+                    skillInput.value = arr.join(', ');
+                    renderTags();
+                }
+            });
+        });
+
+        // Submit update
+        document.getElementById('profileForm').addEventListener('submit', async ev => {
+            ev.preventDefault();
+            updateMsgEl.textContent = '';
 
             const bodyData = {
-                volunteerId: volunteerData.volunteerId,
-                username: volunteerData.username, // giữ nguyên
-                fullName: updatedFullName,
-                email: updatedEmail,
-                phoneNumber: updatedPhoneNumber,
-                address: updatedAddress,
-                skill: updatedSkill
-                // Không truyền rating
+                id:             volunteerData.id,
+                fullName:       fullNameInput.value.trim(),
+                email:          emailInput.value.trim(),
+                phoneNumber:    phoneNumberInput.value.trim(),
+                address:        addressInput.value.trim(),
+                skills:         skillInput.value.split(',').map(s=>s.trim()).filter(s=>s),
+                latitude:       lat,
+                longitude:      lon,
+                availableHours: volunteerData.availableHours,
+                rating:         volunteerData.rating,
+                status:         volunteerData.status
             };
 
             try {
-                const resPut = await fetch(
-                    'https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/volunteerinf',
-                    {
-                        method: 'PUT',
-                        mode: 'cors',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`
-                        },
-                        body: JSON.stringify(bodyData)
-                    }
-                );
-                if (!resPut.ok) {
-                    console.error('Lỗi khi cập nhật hồ sơ:', resPut.status);
-                    updateMsgEl.innerHTML = `<div class="alert alert-danger">
-            Cập nhật thất bại (mã ${resPut.status}).
-          </div>`;
-                    return;
-                }
-                const updatedRes = await resPut.json();
-                updateMsgEl.innerHTML = `<div class="alert alert-success">
-          Cập nhật thành công!
-        </div>`;
+                const resPut = await fetch('http://localhost:8080/volunteers/12/update', {
+                    method:  'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization:  `Bearer ${token}`
+                    },
+                    body: JSON.stringify(bodyData)
+                });
+                if (!resPut.ok) throw new Error(resPut.status);
+                const updated = await resPut.json();
+                volunteerData = { ...volunteerData, ...updated };
+                updateMsgEl.innerHTML = '<div class="alert alert-success">Cập nhật thành công!</div>';
 
-                // Cập nhật volunteerData và static display
-                volunteerData = { ...volunteerData, ...updatedRes };
-                staticEmail.textContent = updatedRes.email;
-                staticFullName.textContent = updatedRes.fullName;
-                staticPhoneNumber.textContent = updatedRes.phoneNumber;
-                staticAddress.textContent = updatedRes.address;
-                staticSkill.textContent = Array.isArray(updatedRes.skill)
-                    ? updatedRes.skill.join(', ')
-                    : '';
-                if (updatedRes.rating != null) {
-                    staticRating.textContent = updatedRes.rating;
-                    ratingInput.value = updatedRes.rating;
-                }
+                // Cập nhật static
+                staticAvailableHours.textContent = volunteerData.availableHours ?? '–';
+                staticEmail.textContent          = volunteerData.email;
+                staticFullName.textContent       = volunteerData.fullName;
+                staticPhoneNumber.textContent    = volunteerData.phoneNumber;
+                staticAddress.textContent = volunteerData.address
+                    ?? (volunteerData.latitude!=null && volunteerData.longitude!=null
+                        ? `${volunteerData.latitude}, ${volunteerData.longitude}` : '–');
+                staticSkill.textContent          = (volunteerData.skills || []).join(', ');
 
-                // Sau vài giây, tự chuyển lại về chế độ static
                 setTimeout(() => {
                     editFormWrapper.style.display = 'none';
-                    staticInfo.style.display = 'block';
-                    updateMsgEl.innerHTML = '';
+                    staticInfo.style.display      = 'block';
+                    updateMsgEl.innerHTML         = '';
                 }, 1500);
             } catch (err) {
-                console.error('Lỗi khi PUT hồ sơ:', err);
-                updateMsgEl.innerHTML = `<div class="alert alert-danger">
-          Không thể kết nối tới server.
-        </div>`;
+                console.error(err);
+                updateMsgEl.innerHTML = '<div class="alert alert-danger">Cập nhật thất bại.</div>';
             }
         });
     });
 </script>
-
-<!-- Giữ nguyên file auth.js nếu đang dùng -->
 <script src="auth.js"></script>
 </body>
 </html>

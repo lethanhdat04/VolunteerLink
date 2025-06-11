@@ -19,15 +19,9 @@
         <a class="navbar-brand recipient" href="dashboard-recipient.html">Recipient</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="dashboard-recipient.html">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="requests-recipient.html">Yêu cầu trợ giúp</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="recipient-profile.html">Hồ sơ</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="dashboard-recipient.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="requests-recipient.html">Yêu cầu trợ giúp</a></li>
+                <li class="nav-item"><a class="nav-link active" href="recipient-profile.html">Hồ sơ</a></li>
             </ul>
         </div>
         <a class="nav-link" href="#" id="btnLogout">
@@ -60,40 +54,24 @@
             <div id="staticInfo">
                 <div class="row gx-4">
                     <div class="col-md-6 mb-4">
-                        <label class="form-label text-secondary">Tên đăng nhập:</label>
-                        <div>
-                            <span id="staticUsername">–</span>
-                        </div>
+                        <label class="form-label text-secondary">Họ và tên:</label>
+                        <div><span id="staticFullName">–</span></div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Email:</label>
-                        <div>
-                            <span id="staticEmail">–</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label text-secondary">Họ và tên:</label>
-                        <div>
-                            <span id="staticFullName">–</span>
-                        </div>
+                        <div><span id="staticEmail">–</span></div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Số điện thoại:</label>
-                        <div>
-                            <span id="staticPhoneNumber">–</span>
-                        </div>
+                        <div><span id="staticPhoneNumber">–</span></div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Địa chỉ:</label>
-                        <div>
-                            <span id="staticAddress">–</span>
-                        </div>
+                        <div><span id="staticAddress">–</span></div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label class="form-label text-secondary">Status:</label>
-                        <div>
-                            <span id="staticStatus" class="badge bg-success">–</span>
-                        </div>
+                        <div><span id="staticStatus" class="badge bg-success">–</span></div>
                     </div>
                 </div>
                 <button id="btnEdit" class="btn btn-warning w-100">Cập nhật</button>
@@ -102,28 +80,24 @@
             <div id="editFormWrapper" class="profile-form-wrapper" style="display: none;">
                 <form id="profileForm" class="profile-form">
                     <div class="mb-3">
-                        <label for="username" class="form-label">Tên đăng nhập</label>
-                        <input type="text" class="form-control" id="username" name="username" required />
+                        <label for="fullName" class="form-label">Họ và tên</label>
+                        <input type="text" class="form-control" id="fullName" required />
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="fullName" class="form-label">Họ và tên</label>
-                        <input type="text" class="form-control" id="fullName" name="fullName" required />
+                        <input type="email" class="form-control" id="email" required />
                     </div>
                     <div class="mb-3">
                         <label for="phoneNumber" class="form-label">Số điện thoại</label>
-                        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" />
+                        <input type="text" class="form-control" id="phoneNumber" />
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Địa chỉ</label>
-                        <input type="text" class="form-control" id="address" name="address" />
+                        <input type="text" class="form-control" id="address" />
                     </div>
                     <div class="mb-3">
                         <label for="status" class="form-label">Status</label>
-                        <select class="form-select" id="status" name="status">
+                        <select class="form-select" id="status">
                             <option value="ACTIVE">ACTIVE</option>
                             <option value="INACTIVE">INACTIVE</option>
                         </select>
@@ -142,29 +116,26 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
-        const loadingEl = document.getElementById('loading');
-        const contentEl = document.getElementById('profileContent');
-        const fullNameDisplay = document.getElementById('fullNameDisplay');
-        const roleDisplay = document.getElementById('roleDisplay');
-
-        const staticUsername = document.getElementById('staticUsername');
-        const staticEmail = document.getElementById('staticEmail');
-        const staticFullName = document.getElementById('staticFullName');
+        const loadingEl         = document.getElementById('loading');
+        const contentEl         = document.getElementById('profileContent');
+        const fullNameDisplay   = document.getElementById('fullNameDisplay');
+        const roleDisplay       = document.getElementById('roleDisplay');
+        const staticFullName    = document.getElementById('staticFullName');
+        const staticEmail       = document.getElementById('staticEmail');
         const staticPhoneNumber = document.getElementById('staticPhoneNumber');
-        const staticAddress = document.getElementById('staticAddress');
-        const staticStatus = document.getElementById('staticStatus');
+        const staticAddress     = document.getElementById('staticAddress');
+        const staticStatus      = document.getElementById('staticStatus');
 
-        const btnEdit = document.getElementById('btnEdit');
-        const editFormWrapper = document.getElementById('editFormWrapper');
-        const staticInfo = document.getElementById('staticInfo');
-        const updateMsgEl = document.getElementById('updateMessage');
+        const btnEdit           = document.getElementById('btnEdit');
+        const editFormWrapper   = document.getElementById('editFormWrapper');
+        const staticInfo        = document.getElementById('staticInfo');
+        const updateMsgEl       = document.getElementById('updateMessage');
 
-        const usernameInput = document.getElementById('username');
-        const emailInput = document.getElementById('email');
-        const fullNameInput = document.getElementById('fullName');
-        const phoneNumberInput = document.getElementById('phoneNumber');
-        const addressInput = document.getElementById('address');
-        const statusInput = document.getElementById('status');
+        const fullNameInput     = document.getElementById('fullName');
+        const emailInput        = document.getElementById('email');
+        const phoneNumberInput  = document.getElementById('phoneNumber');
+        const addressInput      = document.getElementById('address');
+        const statusInput       = document.getElementById('status');
 
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -174,7 +145,7 @@
 
         let recipientData;
         try {
-            const res = await fetch('https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/recipientinf', {
+            const res = await fetch('http://localhost:8080/recipients/6', {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -193,59 +164,57 @@
             contentEl.style.display = 'flex';
         }
 
-        fullNameDisplay.textContent = recipientData.fullname || '';
-        roleDisplay.textContent = 'RECIPIENT';
+        // Hiển thị static
+        fullNameDisplay.textContent   = recipientData.fullName;
+        roleDisplay.textContent       = 'RECIPIENT';
+        staticFullName.textContent    = recipientData.fullName;
+        staticEmail.textContent       = recipientData.email;
+        staticPhoneNumber.textContent = recipientData.phoneNumber;
+        staticAddress.textContent     = recipientData.address ?? '';
+        staticStatus.textContent      = recipientData.status;
+        staticStatus.className        = recipientData.status === 'ACTIVE'
+            ? 'badge bg-success' : 'badge bg-danger';
 
-        staticUsername.textContent    = recipientData.username || '';
-        staticEmail.textContent       = recipientData.email || '';
-        staticFullName.textContent    = recipientData.fullname || '';
-        staticPhoneNumber.textContent = recipientData.phoneNumber || '';
-        staticAddress.textContent     = recipientData.address || '';
-        staticStatus.textContent      = recipientData.status || '–';
-        staticStatus.classList.toggle(
-            recipientData.status === 'ACTIVE' ? 'bg-success' : 'bg-danger',
-            true
-        );
-
+        // Edit mode
         btnEdit.addEventListener('click', () => {
-            staticInfo.style.display = 'none';
+            staticInfo.style.display      = 'none';
             editFormWrapper.style.display = 'block';
 
-            usernameInput.value    = recipientData.username || '';
-            emailInput.value       = recipientData.email || '';
-            fullNameInput.value    = recipientData.fullname || '';
-            phoneNumberInput.value = recipientData.phoneNumber || '';
-            addressInput.value     = recipientData.address || '';
-            statusInput.value      = recipientData.status || 'ACTIVE';
+            fullNameInput.value    = recipientData.fullName;
+            emailInput.value       = recipientData.email;
+            phoneNumberInput.value = recipientData.phoneNumber;
+            addressInput.value     = recipientData.address ?? '';
+            statusInput.value      = recipientData.status;
         });
 
+        // Hủy
         document.getElementById('btnCancel').addEventListener('click', () => {
             editFormWrapper.style.display = 'none';
-            staticInfo.style.display = 'block';
-            updateMsgEl.innerHTML = '';
+            staticInfo.style.display      = 'block';
+            updateMsgEl.innerHTML         = '';
         });
 
+        // Lưu
         document.getElementById('profileForm').addEventListener('submit', async function (ev) {
             ev.preventDefault();
             updateMsgEl.textContent = '';
 
-            const dataToUpdate = {
-                username:    usernameInput.value.trim(),
-                email:       emailInput.value.trim(),
-                fullname:    fullNameInput.value.trim(),
-                phoneNumber: phoneNumberInput.value.trim(),
-                address:     addressInput.value.trim(),
-                status:      statusInput.value
+            const bodyData = {
+                fullName:   fullNameInput.value.trim(),
+                email:      emailInput.value.trim(),
+                phoneNumber:phoneNumberInput.value.trim(),
+                address:    addressInput.value.trim(),
+                status:     statusInput.value
             };
 
             try {
-                const resUpdate = await fetch('https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/recipientinf', {
+                const resUpdate = await fetch('http://localhost:8080/recipients/update', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify(dataToUpdate)
+                    body: JSON.stringify(bodyData)
                 });
                 if (!resUpdate.ok) {
                     throw new Error(`Lỗi ${resUpdate.status}`);
@@ -253,27 +222,23 @@
                 const updated = await resUpdate.json();
                 recipientData = updated;
 
-                staticUsername.textContent    = updated.username;
+                staticFullName.textContent    = updated.fullName;
                 staticEmail.textContent       = updated.email;
-                staticFullName.textContent    = updated.fullname;
                 staticPhoneNumber.textContent = updated.phoneNumber;
-                staticAddress.textContent     = updated.address;
+                staticAddress.textContent     = updated.address ?? '';
                 staticStatus.textContent      = updated.status;
-                staticStatus.classList.toggle(
-                    updated.status === 'ACTIVE' ? 'bg-success' : 'bg-danger',
-                    true
-                );
+                staticStatus.className        = updated.status === 'ACTIVE'
+                    ? 'badge bg-success' : 'badge bg-danger';
 
                 updateMsgEl.innerHTML = '<div class="alert alert-success">Cập nhật thành công.</div>';
                 setTimeout(() => {
                     editFormWrapper.style.display = 'none';
-                    staticInfo.style.display = 'block';
-                    updateMsgEl.innerHTML = '';
+                    staticInfo.style.display      = 'block';
+                    updateMsgEl.innerHTML         = '';
                 }, 1000);
             } catch (err) {
                 console.error('Lỗi khi cập nhật recipient info:', err);
-                updateMsgEl.innerHTML =
-                    `<div class="alert alert-danger">Cập nhật thất bại: ${err.message}</div>`;
+                updateMsgEl.innerHTML = `<div class="alert alert-danger">Cập nhật thất bại: ${err.message}</div>`;
             }
         });
     });
