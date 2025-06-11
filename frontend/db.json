@@ -1,0 +1,579 @@
+{
+  "events": [
+    {
+      "id": "1",
+      "organizationId": 1,
+      "title": "Community Park Clean-Up",
+      "description": "Tham gia dọn dẹp công viên địa phương, bảo vệ môi trường xanh – sạch – đẹp.",
+      "location": "Công viên Gia Định, TP.HCM",
+      "startTime": "2025-06-15T08:00:00",
+      "endTime": "2025-06-15T12:00:00",
+      "requiredSkills": [
+        "Làm việc nhóm",
+        "Vận động"
+      ],
+      "maxParticipants": 30,
+      "status": "PLANNED"
+    },
+    {
+      "id": "2",
+      "organizationId": 2,
+      "title": "Food Bank Packaging",
+      "description": "Gói thực phẩm hỗ trợ cho các gia đình khó khăn.",
+      "location": "Nhà văn hóa Thanh Niên, TP.HCM",
+      "startTime": "2025-06-20T09:00:00",
+      "endTime": "2025-06-20T13:00:00",
+      "requiredSkills": [
+        "Sắp xếp",
+        "Tinh thần trách nhiệm"
+      ],
+      "maxParticipants": 50,
+      "status": "PLANNED"
+    },
+    {
+      "id": "3",
+      "organizationId": 1,
+      "title": "Senior Home Visit",
+      "description": "Thăm hỏi và giao lưu với các cụ già tại nhà dưỡng lão.",
+      "location": "Nhà dưỡng lão Hạnh Phúc, Bình Thạnh",
+      "startTime": "2025-06-25T14:00:00",
+      "endTime": "2025-06-25T17:00:00",
+      "requiredSkills": [
+        "Giao tiếp",
+        "Kiên nhẫn"
+      ],
+      "maxParticipants": 15,
+      "status": "PLANNED"
+    },
+    {
+      "id": "4",
+      "organizationId": 3,
+      "title": "Beach Plastic Collection",
+      "description": "Thu gom rác nhựa trên bãi biển, góp phần bảo vệ môi trường biển.",
+      "location": "Bãi biển Vũng Tàu",
+      "startTime": "2025-07-01T07:00:00",
+      "endTime": "2025-07-01T11:00:00",
+      "requiredSkills": [
+        "Vận động",
+        "Nhóm"
+      ],
+      "maxParticipants": 40,
+      "status": "PLANNED"
+    },
+    {
+      "id": "5",
+      "organizationId": 2,
+      "title": "Animal Shelter Support",
+      "description": "Giúp chăm sóc và dọn dẹp chuồng trại tại trại cứu hộ động vật.",
+      "location": "Trại cứu hộ Thú Cưng, Quận 9",
+      "startTime": "2025-07-05T09:00:00",
+      "endTime": "2025-07-05T12:00:00",
+      "requiredSkills": [
+        "Yêu động vật",
+        "Tổ chức"
+      ],
+      "maxParticipants": 20,
+      "status": "PLANNED"
+    },
+    {
+      "id": "6",
+      "organizationId": 4,
+      "title": "Tree Planting Day",
+      "description": "Trồng cây phủ xanh đồi trọc, góp phần giảm khí CO₂.",
+      "location": "Đồi Bảo Đại, Đà Lạt",
+      "startTime": "2025-07-10T08:00:00",
+      "endTime": "2025-07-10T12:00:00",
+      "requiredSkills": [
+        "Thời gian dài ngoài trời",
+        "Sức khỏe tốt"
+      ],
+      "maxParticipants": 25,
+      "status": "PLANNED"
+    },
+    {
+      "id": "7",
+      "organizationId": 3,
+      "title": "Literacy Tutoring",
+      "description": "Gia sư tiếng Anh cho trẻ em vùng sâu vùng xa.",
+      "location": "Trường Tiểu học A Lưới, Huế",
+      "startTime": "2025-07-15T13:00:00",
+      "endTime": "2025-07-15T17:00:00",
+      "requiredSkills": [
+        "Tiếng Anh",
+        "Kiên nhẫn"
+      ],
+      "maxParticipants": 10,
+      "status": "PLANNED"
+    },
+    {
+      "id": "8",
+      "organizationId": 5,
+      "title": "Blood Donation Drive",
+      "description": "Hiến máu nhân đạo, cứu sống nhiều người bệnh.",
+      "location": "Bệnh viện Chợ Rẫy, TP.HCM",
+      "startTime": "2025-07-20T07:30:00",
+      "endTime": "2025-07-20T11:30:00",
+      "requiredSkills": [
+        "Sức khỏe tốt"
+      ],
+      "maxParticipants": 100,
+      "status": "PLANNED"
+    },
+    {
+      "id": "9",
+      "organizationId": 4,
+      "title": "Community Health Check",
+      "description": "Khám sức khỏe miễn phí cho người dân nghèo.",
+      "location": "Nhà văn hóa Lao động, Đà Nẵng",
+      "startTime": "2025-07-25T08:00:00",
+      "endTime": "2025-07-25T12:00:00",
+      "requiredSkills": [
+        "Y tế cơ bản",
+        "Giao tiếp"
+      ],
+      "maxParticipants": 50,
+      "status": "PLANNED"
+    },
+    {
+      "id": "10",
+      "organizationId": 1,
+      "title": "Library Book Sorting",
+      "description": "Sắp xếp sách tại thư viện cộng đồng.",
+      "location": "Thư viện Quận 3, TP.HCM",
+      "startTime": "2025-08-01T10:00:00",
+      "endTime": "2025-08-01T14:00:00",
+      "requiredSkills": [
+        "Tỉ mỉ",
+        "Tổ chức"
+      ],
+      "maxParticipants": 20,
+      "status": "PLANNED"
+    },
+    {
+      "id": "11",
+      "organizationId": 2,
+      "title": "Youth Sports Coaching",
+      "description": "Huấn luyện thể thao cho thanh thiếu niên địa phương.",
+      "location": "Sân vận động Rạch Miễu, Vĩnh Long",
+      "startTime": "2025-08-05T15:00:00",
+      "endTime": "2025-08-05T18:00:00",
+      "requiredSkills": [
+        "Thể thao",
+        "Truyền cảm hứng"
+      ],
+      "maxParticipants": 30,
+      "status": "PLANNED"
+    },
+    {
+      "id": "12",
+      "organizationId": 3,
+      "title": "Recycling Workshop",
+      "description": "Buổi workshop tái chế đồ cũ thành đồ dùng hữu ích.",
+      "location": "Không gian sáng tạo, Hà Nội",
+      "startTime": "2025-08-10T09:00:00",
+      "endTime": "2025-08-10T12:00:00",
+      "requiredSkills": [
+        "Sáng tạo",
+        "Thủ công"
+      ],
+      "maxParticipants": 25,
+      "status": "PLANNED"
+    },
+    {
+      "id": "13",
+      "organizationId": 4,
+      "title": "Art for Kids",
+      "description": "Dạy vẽ cơ bản cho trẻ em mồ côi.",
+      "location": "Trại trẻ mồ côi, Đà Lạt",
+      "startTime": "2025-08-15T14:00:00",
+      "endTime": "2025-08-15T17:00:00",
+      "requiredSkills": [
+        "Vẽ",
+        "Kiên nhẫn"
+      ],
+      "maxParticipants": 15,
+      "status": "PLANNED"
+    },
+    {
+      "id": "14",
+      "organizationId": 5,
+      "title": "Winter Clothing Drive",
+      "description": "Thu gom áo ấm cho trẻ em vùng cao.",
+      "location": "UBND Huyện Sa Pa, Lào Cai",
+      "startTime": "2025-09-01T08:00:00",
+      "endTime": "2025-09-01T12:00:00",
+      "requiredSkills": [
+        "Phối hợp",
+        "Tổ chức"
+      ],
+      "maxParticipants": 40,
+      "status": "PLANNED"
+    },
+    {
+      "id": "15",
+      "organizationId": 1,
+      "title": "Disaster Relief Packing",
+      "description": "Gói hàng cứu trợ gửi vùng bão lũ.",
+      "location": "Kho cứu trợ, Quận 9",
+      "startTime": "2025-09-10T09:00:00",
+      "endTime": "2025-09-10T13:00:00",
+      "requiredSkills": [
+        "Nhanh nhẹn",
+        "Chịu áp lực"
+      ],
+      "maxParticipants": 60,
+      "status": "PLANNED"
+    },
+    {
+      "id": "16",
+      "organizationId": 2,
+      "title": "Community Gardening",
+      "description": "Chung tay trồng và chăm sóc vườn rau cộng đồng.",
+      "location": "Khu dân cư Bình Thạnh",
+      "startTime": "2025-09-15T07:00:00",
+      "endTime": "2025-09-15T11:00:00",
+      "requiredSkills": [
+        "Làm vườn",
+        "Kiên nhẫn"
+      ],
+      "maxParticipants": 20,
+      "status": "PLANNED"
+    },
+    {
+      "id": "17",
+      "organizationId": 3,
+      "title": "Digital Literacy Class",
+      "description": "Dạy sử dụng máy tính và Internet cho người già.",
+      "location": "Trung tâm cộng đồng Quận 5",
+      "startTime": "2025-09-20T14:00:00",
+      "endTime": "2025-09-20T17:00:00",
+      "requiredSkills": [
+        "Tin học cơ bản",
+        "Kiên nhẫn"
+      ],
+      "maxParticipants": 15,
+      "status": "PLANNED"
+    },
+    {
+      "id": "18",
+      "organizationId": 4,
+      "title": "Music Therapy Session",
+      "description": "Liệu pháp âm nhạc cho trẻ tự kỷ.",
+      "location": "Trung tâm phục hồi chức năng, Hà Nội",
+      "startTime": "2025-09-25T10:00:00",
+      "endTime": "2025-09-25T12:00:00",
+      "requiredSkills": [
+        "Âm nhạc",
+        "Kiên nhẫn"
+      ],
+      "maxParticipants": 10,
+      "status": "PLANNED"
+    },
+    {
+      "id": "19",
+      "organizationId": 5,
+      "title": "Language Exchange Meetup",
+      "description": "Giao lưu và trao đổi ngôn ngữ giữa sinh viên và người bản địa.",
+      "location": "Quán cà phê Hội Ngộ, Đà Nẵng",
+      "startTime": "2025-10-01T18:00:00",
+      "endTime": "2025-10-01T20:00:00",
+      "requiredSkills": [
+        "Ngoại ngữ",
+        "Giao tiếp"
+      ],
+      "maxParticipants": 25,
+      "status": "PLANNED"
+    },
+    {
+      "id": "20",
+      "organizationId": 1,
+      "title": "Charity Concert Fundraiser",
+      "description": "Buổi hòa nhạc gây quỹ từ thiện hỗ trợ trẻ mồ côi.",
+      "location": "Nhà hát TP.HCM",
+      "startTime": "2025-10-05T19:00:00",
+      "endTime": "2025-10-05T22:00:00",
+      "requiredSkills": [
+        "Âm nhạc",
+        "Tổ chức sự kiện"
+      ],
+      "maxParticipants": 200,
+      "status": "PLANNED"
+    },
+    {
+      "id": "",
+      "title": "tạo sự kiện",
+      "description": "đ",
+      "startTime": "2025-05-10T14:24",
+      "endTime": "2025-05-24T14:24",
+      "location": "s",
+      "requiredSkills": "s",
+      "maxParticipants": "2",
+      "status": "PLANNED",
+      "organizationId": 1
+    }
+  ],
+  "registrations": [
+    {
+      "id": "6001",
+      "eventId": "1",
+      "volunteerId": 1,
+      "registrationDate": "2025-05-27T08:53:03.514Z",
+      "status": "NO_SHOW",
+      "rating": 0
+    },
+    {
+      "id": "1d7d",
+      "eventId": "3",
+      "volunteerId": 1,
+      "registrationDate": "2025-05-27T08:54:10.458Z",
+      "status": "CONFIRMED",
+      "rating": 0
+    },
+    {
+      "id": "108a",
+      "eventId": "10",
+      "volunteerId": 1,
+      "registrationDate": "2025-05-27T08:59:18.917Z",
+      "status": "NO_SHOW",
+      "rating": 0
+    }
+  ],
+  "helpRequests": [
+    {
+      "id": "1",
+      "recipientId": 10,
+      "title": "Đưa cụ bà đến bệnh viện",
+      "description": "Cần hỗ trợ đưa cụ bà Nguyễn Thị A từ nhà đến BV Quân y 175.",
+      "location": "123 Nguyễn Văn Cừ, Quận 5",
+      "requiredSkills": [
+        "Lái xe",
+        "Hỗ trợ di chuyển"
+      ],
+      "urgencyLevel": "HIGH",
+      "status": "ACCEPTED",
+      "volunteerId": 0
+    },
+    {
+      "id": "2",
+      "recipientId": 12,
+      "title": "Dọn dẹp nhà cửa cho cụ ông",
+      "description": "Giúp cụ ông Trần Văn B lau chùi, quét dọn trong nhà.",
+      "location": "45 Lê Lợi, Quận 1",
+      "requiredSkills": [
+        "Quét dọn",
+        "Di chuyển đồ"
+      ],
+      "urgencyLevel": "MEDIUM",
+      "status": "ACCEPTED",
+      "volunteerId": 0
+    },
+    {
+      "id": "3",
+      "recipientId": 15,
+      "title": "Mua thuốc theo đơn",
+      "description": "Mua hộ thuốc theo đơn tại nhà thuốc Phúc An.",
+      "location": "200 Phan Đình Phùng, Phú Nhuận",
+      "requiredSkills": [
+        "Đi lại",
+        "Thanh toán"
+      ],
+      "urgencyLevel": "LOW",
+      "status": "PENDING",
+      "volunteerId": 0
+    },
+    {
+      "id": "4",
+      "recipientId": 20,
+      "title": "Hỗ trợ mang vác đồ",
+      "description": "Mang vác đồ dùng thiết yếu lên lầu cho cụ bà.",
+      "location": "78 Trần Hưng Đạo, Quận 1",
+      "requiredSkills": [
+        "Sức khỏe tốt"
+      ],
+      "urgencyLevel": "MEDIUM",
+      "status": "PENDING",
+      "volunteerId": 0
+    },
+    {
+      "id": "5",
+      "recipientId": 22,
+      "title": "Cùng cụ xem tivi",
+      "description": "Ngồi trò chuyện và xem tivi cùng cụ suốt buổi chiều.",
+      "location": "12 Huỳnh Thúc Kháng, Quận 1",
+      "requiredSkills": [
+        "Giao tiếp",
+        "Kiên nhẫn"
+      ],
+      "urgencyLevel": "LOW",
+      "status": "PENDING",
+      "volunteerId": 0
+    },
+    {
+      "id": "6",
+      "recipientId": 25,
+      "title": "Đưa bé đi học thêm",
+      "description": "Đưa bé Nguyễn Văn C đến lớp học thêm Tiếng Anh.",
+      "location": "30 Nguyễn Thị Minh Khai, Quận 3",
+      "requiredSkills": [
+        "Lái xe",
+        "Giám sát trẻ em"
+      ],
+      "urgencyLevel": "HIGH",
+      "status": "ACCEPTED",
+      "volunteerId": 0
+    },
+    {
+      "id": "7",
+      "recipientId": 30,
+      "title": "Mua cơm trưa cho cụ",
+      "description": "Mua cơm trưa và đem đến nhà cho cụ ông.",
+      "location": "99L Phan Xích Long, Phú Nhuận",
+      "requiredSkills": [
+        "Thanh toán",
+        "Đi lại"
+      ],
+      "urgencyLevel": "MEDIUM",
+      "status": "PENDING",
+      "volunteerId": 0
+    },
+    {
+      "id": "8",
+      "recipientId": 32,
+      "title": "Hỗ trợ cài đặt điện thoại",
+      "description": "Giúp cụ bà A. cài đặt ứng dụng gọi video.",
+      "location": "55 Hoàng Sa, Bình Thạnh",
+      "requiredSkills": [
+        "Công nghệ",
+        "Giao tiếp"
+      ],
+      "urgencyLevel": "LOW",
+      "status": "PENDING",
+      "volunteerId": 0
+    }
+  ],
+  "notifications": [
+    {
+      "id": "f7a6",
+      "recipientId": 1,
+      "senderId": 0,
+      "title": "Đăng ký sự kiện",
+      "content": "Bạn đã đăng ký tham gia sự kiện \"Community Park Clean-Up\"",
+      "type": "SYSTEM",
+      "status": "READ",
+      "createdDate": "2025-05-27T08:53:03.514Z"
+    },
+    {
+      "id": "5f49",
+      "recipientId": 1,
+      "senderId": 1,
+      "title": "Trạng thái đăng ký",
+      "content": "Bạn đã được <strong style=\"color:blue\">chấp nhận</strong> tham gia sự kiện \"Community Park Clean-Up\"",
+      "type": "SYSTEM",
+      "status": "READ",
+      "createdDate": "2025-05-27T08:53:25.197Z"
+    },
+    {
+      "id": "a67c",
+      "recipientId": 1,
+      "senderId": 0,
+      "title": "Đăng ký sự kiện",
+      "content": "Bạn đã đăng ký tham gia sự kiện \"Senior Home Visit\"",
+      "type": "SYSTEM",
+      "status": "READ",
+      "createdDate": "2025-05-27T08:54:10.458Z"
+    },
+    {
+      "id": "218b",
+      "recipientId": 1,
+      "senderId": 1,
+      "title": "Trạng thái đăng ký",
+      "content": "Bạn đã được <strong style=\"color:blue\">chấp nhận</strong> tham gia sự kiện \"Senior Home Visit\"",
+      "type": "SYSTEM",
+      "status": "READ",
+      "createdDate": "2025-05-27T08:58:56.652Z"
+    },
+    {
+      "id": "a3da",
+      "recipientId": 1,
+      "senderId": 0,
+      "title": "Đăng ký sự kiện",
+      "content": "Bạn đã đăng ký tham gia sự kiện \"Library Book Sorting\"",
+      "type": "SYSTEM",
+      "status": "READ",
+      "createdDate": "2025-05-27T08:59:18.917Z"
+    },
+    {
+      "id": "e00a",
+      "recipientId": 1,
+      "senderId": 1,
+      "title": "Trạng thái đăng ký",
+      "content": "Bạn đã bị <strong style=\"color:red\">từ chối</strong> tham gia sự kiện \"Library Book Sorting\"",
+      "type": "SYSTEM",
+      "status": "READ",
+      "createdDate": "2025-05-27T08:59:25.530Z"
+    },
+    {
+      "id": "598e",
+      "recipientId": 3,
+      "senderId": 5,
+      "title": "Tạo sự kiện",
+      "content": "Bạn đã tạo sự kiện \"test\"",
+      "type": "SYSTEM",
+      "status": "READ",
+      "createdDate": "2025-05-27T09:40:46.959Z"
+    },
+    {
+      "id": "31a9",
+      "recipientId": 1,
+      "senderId": 1,
+      "title": "Trạng thái đăng ký",
+      "content": "Bạn đã được <strong style=\"color:blue\">chấp nhận</strong> tham gia sự kiện \"Community Park Clean-Up\"",
+      "type": "SYSTEM",
+      "status": "READ",
+      "createdDate": "2025-05-28T07:23:30.928Z"
+    },
+    {
+      "id": "ab20",
+      "recipientId": 1,
+      "senderId": 1,
+      "title": "Trạng thái đăng ký",
+      "content": "Bạn đã bị <strong style=\"color:red\">từ chối</strong> tham gia sự kiện \"Community Park Clean-Up\"",
+      "type": "SYSTEM",
+      "status": "UNREAD",
+      "createdDate": "2025-05-28T07:23:51.938Z"
+    },
+    {
+      "id": "78fb",
+      "recipientId": 3,
+      "senderId": 5,
+      "title": "Tạo sự kiện",
+      "content": "Bạn đã tạo sự kiện \"tạo sự kiện\"",
+      "type": "SYSTEM",
+      "status": "READ",
+      "createdDate": "2025-05-28T07:24:21.983Z"
+    }
+  ],
+  "login": [
+    {
+      "id": 1,
+      "username": "volunteer01",
+      "password": "123456",
+      "accessToken": "fake-jwt-token-volunteer01",
+      "role": "VOLUNTEER"
+    },
+    {
+      "id": 2,
+      "username": "admin01",
+      "password": "adminpass",
+      "accessToken": "fake-jwt-token-admin01",
+      "role": "ADMIN"
+    },
+    {
+      "id": 3,
+      "username": "org01",
+      "password": "orgpass",
+      "accessToken": "fake-jwt-token-org01",
+      "role": "ORGANIZATION"
+    }
+  ]
+}

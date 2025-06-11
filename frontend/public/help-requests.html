@@ -1,0 +1,119 @@
+<!-- help-requests.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Yêu cầu trợ giúp</title>
+    <!-- Nạp Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Nạp Material Icons (nếu cần) -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- Nạp file style.css (chuyển về đúng đường dẫn nếu file style.css nằm cùng thư mục) -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Một số style phụ cho help-card */
+        .help-card {
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: .2s;
+        }
+        .help-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        .badge-urgency {
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body data-role="VOLUNTEER">
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand volunteer" href="#">Volunteer</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="events-list.html">Sự kiện phù hợp</a></li>
+                <li class="nav-item"><a class="nav-link" href="help-requests.html">Yêu cầu trợ giúp</a></li>
+                <li class="nav-item"><a class="nav-link" href="history.html">Lịch sử</a></li>
+                <li class="nav-item"><a class="nav-link" href="profile.html">Hồ sơ</a></li>
+            </ul>
+        </div>
+        <a class="nav-link" href="#" id="btnLogout">
+            <span class="material-symbols-outlined">logout</span>
+        </a>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">Danh sách yêu cầu trợ giúp</h2>
+    <div class="row" id="helpRow"></div>
+</div>
+
+<!-- Nạp Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (async function(){
+        // Nếu server yêu cầu Authorization Bearer token, lấy token từ localStorage
+        const token = localStorage.getItem('accessToken');
+
+        // Thay URL bên dưới cho đúng mock server /helpRequests của bạn
+        const apiUrl = 'https://162544f1-b989-4423-9195-385f0fdd93b3.mock.pstmn.io/helpRequests';
+
+        let helps = [];
+        try {
+            const res = await fetch(apiUrl, {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    // Nếu mock server không cần token thì chỉ để trống hoặc remove dòng này
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!res.ok) {
+                console.error('Fetch /helpRequests lỗi, status:', res.status);
+                document.getElementById('helpRow').innerHTML =
+                    `<div class="col-12"><div class="alert alert-danger">Không thể tải danh sách. Vui lòng thử lại.</div></div>`;
+                return;
+            }
+            helps = await res.json();
+        } catch(err) {
+            console.error('Lỗi kết nối khi fetch /helpRequests:', err);
+            document.getElementById('helpRow').innerHTML =
+                `<div class="col-12"><div class="alert alert-danger">Không thể kết nối tới server.</div></div>`;
+            return;
+        }
+
+        // Nếu có dữ liệu trả về, hiển thị dưới dạng card giống với events-list
+        const row = document.getElementById('helpRow');
+        helps.forEach(h => {
+            const col = document.createElement('div');
+            col.className = 'col-md-4 mb-4';
+            col.innerHTML = `
+                <div class="card help-card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">${h.title}</h5>
+                        <p class="card-text text-truncate">${h.description}</p>
+                        <p class="mb-1"><strong>Địa điểm:</strong> ${h.location}</p>
+                        <p class="mb-1">
+                            <strong>Cấp độ:</strong>
+                            <span class="badge badge-urgency ${
+                h.urgencyLevel === 'HIGH'   ? 'bg-danger text-white' :
+                    h.urgencyLevel === 'MEDIUM' ? 'bg-warning text-dark' :
+                        'bg-info text-white'
+            }">${h.urgencyLevel}</span>
+                        </p>
+                        <div class="mt-auto">
+                            <a href="help-detail.html?id=${h.id}"
+                               class="btn btn-outline-primary w-100">Chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            row.appendChild(col);
+        });
+    })();
+</script>
+<script src="auth.js"></script>
+</body>
+</html>
