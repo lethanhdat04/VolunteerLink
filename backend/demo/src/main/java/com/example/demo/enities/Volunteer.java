@@ -22,6 +22,6 @@ public class Volunteer extends User {
 
     private Float rating;
 
-    @OneToMany(mappedBy = "volunteer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "volunteer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<EventRegistration> eventRegistrations = new HashSet<>();
 }

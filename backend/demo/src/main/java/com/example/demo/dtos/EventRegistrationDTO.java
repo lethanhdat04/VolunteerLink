@@ -18,8 +18,8 @@ public class EventRegistrationDTO {
 
     private Integer rating;
 
-    private String review;
-
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
+//    private String review;
+//
+//    private LocalDateTime createAt;
+//    private LocalDateTime updateAt;
 }

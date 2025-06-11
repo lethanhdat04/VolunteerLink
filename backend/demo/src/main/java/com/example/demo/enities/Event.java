@@ -26,11 +26,6 @@ public class Event {
 
     private LocalDateTime endTime;
 
-//    @ElementCollection(targetClass = SkillEnum.class, fetch = FetchType.EAGER)
-//    @Enumerated(EnumType.STRING)
-//    @CollectionTable(name = "event_require_skills", joinColumns = @JoinColumn(name = "event_id"))
-//    private Set<SkillEnum> requiredSkills = new HashSet<>();
-
     private Integer maxParticipants;
 
     private Integer participants;
@@ -38,10 +33,10 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventStatusEnum status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<EventRegistration> getRegistrations = new HashSet<>();
 }

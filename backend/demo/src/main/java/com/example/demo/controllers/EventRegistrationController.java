@@ -16,7 +16,7 @@ public class EventRegistrationController {
     }
 
     @PostMapping("/events/{eventId}/volunteers/{volunteerId}")
-    public ResponseEntity<?> registerVolunteer(@PathVariable Integer eventId, @PathVariable Integer volunteerId) {
+    public ResponseEntity<?> registerVolunteerForEvent(@PathVariable Integer eventId, @PathVariable Integer volunteerId) {
         try {
             EventRegistrationDTO eventRegistration = eventRegistrationService.registerVolunteerForEvent(eventId, volunteerId);
             return ResponseEntity.status(HttpStatus.CREATED).body(eventRegistration);
@@ -60,8 +60,4 @@ public class EventRegistrationController {
         return ResponseEntity.ok(eventRegistrationService.rejectRegistration(id));
     }
 
-    @PatchMapping("{id}/pending")
-    public ResponseEntity<?> pendingRegistration(@PathVariable Integer id) {
-        return ResponseEntity.ok(eventRegistrationService.pendingRegistration(id));
-    }
 }

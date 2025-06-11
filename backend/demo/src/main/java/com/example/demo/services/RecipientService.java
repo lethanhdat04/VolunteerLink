@@ -30,7 +30,7 @@ public class RecipientService {
     public RecipientDTO updateRecipient(RecipientDTO recipientDTO) {
         Recipient recipient = recipientRepository.findById(recipientDTO.getId()).orElseThrow(() -> new RuntimeException("Recipient not found"));
         recipient.setUpdateAt(LocalDateTime.now());
-        recipient.setAddress(recipientDTO.getAddress());
+        //recipient.setAddress(recipientDTO.getAddress());
         recipient.setFullName(recipientDTO.getFullName());
         recipient.setEmail(recipientDTO.getEmail());
         recipient.setPhoneNumber(recipientDTO.getPhoneNumber());

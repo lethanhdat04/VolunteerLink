@@ -20,6 +20,6 @@ public class EventDTO {
     private Integer participants;
     private EventStatusEnum status;
     private boolean registered;
-//    private Integer organizationId; // or OrganizationDTO if you need nested info
+    private Integer organizationId; // or OrganizationDTO if you need nested info
 //    private Set<Integer> volunteerIds; // or List<VolunteerDTO> if needed
 }
