@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thống kê hệ thống</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-role="ADMIN">
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand admin" href="admin-approve-accounts.html">Admin</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="admin-approve-accounts.html">Duyệt tài khoản</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-approve-requests.html">Duyệt yêu cầu</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-manage-users.html">Quản lý người dùng</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-stats.html">Thống kê</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-reports.html">Báo cáo</a></li> 
+            </ul>
+        </div>
+        <a class="nav-link" href="#" id="btnLogout">
+            <span class="material-symbols-outlined">logout</span>
+        </a>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">Thống kê hệ thống</h2>
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6>Tổng người dùng</h6>
+                <h3>1 234</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6>Volunteer</h6>
+                <h3>567</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6>Organization</h6>
+                <h3>89</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6>Recipient</h6>
+                <h3>578</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6>Sự kiện</h6>
+                <h3>345</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6>HelpRequest</h6>
+                <h3>789</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6>Hoàn thành SK</h6>
+                <h3>280</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6>Hoàn thành HR</h6>
+                <h3>650</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>

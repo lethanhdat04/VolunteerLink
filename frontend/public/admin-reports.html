@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý báo cáo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-role="ADMIN">
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand admin" href="admin-approve-accounts.html">Admin</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="admin-approve-accounts.html">Duyệt tài khoản</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-approve-requests.html">Duyệt yêu cầu</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-manage-users.html">Quản lý người dùng</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-stats.html">Thống kê</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-reports.html">Báo cáo</a></li>
+            </ul>
+        </div>
+        <a class="nav-link" href="#" id="btnLogout">
+            <span class="material-symbols-outlined">logout</span>
+        </a>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">Quản lý báo cáo</h2>
+    <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tiêu đề</th>
+            <th>Loại</th>
+            <th>Người tạo</th>
+            <th>Ngày</th>
+            <th>Liên quan đến</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Lặp report -->
+        <tr>
+            <td>RPT001</td>
+            <td>Hoạt động bất thường</td>
+            <td><span class="badge bg-warning">SYSTEM_REPORT</span></td>
+            <td>admin</td>
+            <td>10-06-2025</td>
+            <td>EVENT123</td>
+            <td>
+                <a href="admin-report-detail.html?id=RPT001" class="btn btn-sm btn-primary">Chi tiết</a>
+            </td>
+        </tr>
+        <!-- … -->
+        </tbody>
+    </table>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>
