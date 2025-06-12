@@ -25,8 +25,8 @@ public class RecipientController {
         return ResponseEntity.ok(recipientService.getRecipientById(id));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<RecipientDTO> updateRecipient(@RequestBody RecipientDTO recipientDTO) {
-        return ResponseEntity.ok(recipientService.updateRecipient(recipientDTO));
+    @PutMapping("/{id}/update")
+    public ResponseEntity<RecipientDTO> updateRecipient(@PathVariable Integer id, @RequestBody RecipientDTO recipientDTO) {
+        return ResponseEntity.ok(recipientService.updateRecipient(id, recipientDTO));
     }
 }

@@ -31,8 +31,8 @@ public class RecipientService {
     }
 
     @Transactional
-    public RecipientDTO updateRecipient(RecipientDTO recipientDTO) {
-        Recipient recipient = recipientRepository.findById(recipientDTO.getId()).orElseThrow(() -> new RuntimeException("Recipient not found"));
+    public RecipientDTO updateRecipient(Integer id, RecipientDTO recipientDTO) {
+        Recipient recipient = recipientRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipient not found"));
         recipient.setUpdateAt(LocalDateTime.now());
         //recipient.setAddress(recipientDTO.getAddress());
         recipient.setLatitude(recipientDTO.getLatitude());
