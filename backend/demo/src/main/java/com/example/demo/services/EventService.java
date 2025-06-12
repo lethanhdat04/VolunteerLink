@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dtos.EventDTO;
 import com.example.demo.enities.Event;
+import com.example.demo.enities.Organization;
 import com.example.demo.repositories.EventRepository;
 import com.example.demo.repositories.OrganizationRepository;
 import com.example.demo.repositories.VolunteerRepository;
@@ -43,7 +44,22 @@ public class EventService {
 
     @Transactional
     public EventDTO createEvent(EventDTO eventDTO) {
-        Event event = dtoMapper.map(eventDTO, Event.class);
+        Event event = new Event();
+        event.setTitle(eventDTO.getTitle());
+        event.setDescription(eventDTO.getDescription());
+        event.setLocation(eventDTO.getLocation());
+        event.setStartTime(eventDTO.getStartTime());
+        event.setEndTime(eventDTO.getEndTime());
+        event.setMaxParticipants(eventDTO.getMaxParticipants());
+        event.setStatus(eventDTO.getStatus());
+        event.setParticipants(eventDTO.getParticipants());
+
+
+        // Load lại Organization từ DB
+        Organization org = organizationRepository.findById(eventDTO.getOrganizationId())
+                .orElseThrow(() -> new RuntimeException("Organization not found"));
+        event.setOrganization(org); // tránh detached
+
         event = eventRepository.save(event);
 
         return dtoMapper.map(event, EventDTO.class);

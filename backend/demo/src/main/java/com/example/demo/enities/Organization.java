@@ -20,7 +20,7 @@ public class Organization extends User {
 //    @ManyToMany(mappedBy = "organizations")
 //    private Set<SupportArea> supportAreas = new HashSet<>();
 
-    @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
     private Set<Event> events;
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)

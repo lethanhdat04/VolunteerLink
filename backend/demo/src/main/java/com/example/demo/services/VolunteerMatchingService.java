@@ -55,6 +55,16 @@ public class VolunteerMatchingService {
                 .collect(Collectors.toList());
     }
 
+//    public List<MatchResultDTO> findMatchingRequests(Integer id) {
+//        Volunteer volunteer = volunteerRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Volunteer not found"));
+//        List<HelpRequest> helpRequests = helpRequestRepository.findAll();
+//        List<HelpRequestDTO> helpRequestDTOS = new ArrayList<>();
+//        for (HelpRequest helpRequest : helpRequests) {
+//            helpRequestDTOS.add(new HelpRequestDTO(helpRequest));
+//        }
+//
+//    }
+
     private MatchingCriteriaDTO getDefaultCriteria() {
         MatchingCriteriaDTO criteria = new MatchingCriteriaDTO();
         criteria.setMinRating(3);       // ví dụ: yêu cầu đánh giá tối thiểu
