@@ -10,6 +10,7 @@ import com.example.demo.enums.SkillEnum;
 import com.example.demo.repositories.HelpRequestRepository;
 import com.example.demo.repositories.VolunteerRepository;
 import com.example.demo.utils.DtoMapper;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class VolunteerMatchingService {
         this.dtoMapper = dtoMapper;
     }
 
+    @Transactional
     public List<MatchResultDTO> findMatchingVolunteers(Integer id) {
         HelpRequest helpRequest = helpRequestRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy Help Request"));
         HelpRequestDTO helpRequestDTO = new HelpRequestDTO(helpRequest);

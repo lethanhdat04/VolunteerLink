@@ -12,7 +12,7 @@ public class EventRegistrationDTO {
     private Integer id;
     private Integer eventId;
     private Integer volunteerId;
-    private LocalDateTime registrationDate;
+    private LocalDateTime registrationTime;
     @Enumerated(EnumType.STRING)
     private RegistrationStatusEnum status;
 

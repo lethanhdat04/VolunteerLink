@@ -8,6 +8,7 @@ import com.example.demo.enums.UserStatusEnum;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.utils.DtoMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,22 +25,26 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional
     public List<UserDTO> findByRole(RoleEnum roleEnum) {
         Role role = roleRepository.findByName(roleEnum).orElseThrow(() -> new RuntimeException("Role not found"));
         List<User> users = userRepository.findByRole(role);
         return dtoMapper.mapList(users, UserDTO.class);
     }
 
+    @Transactional
     public List<UserDTO> getAllUser() {
         List<User> users = userRepository.findAll();
         return dtoMapper.mapList(users, UserDTO.class);
     }
 
+    @Transactional
     public UserDTO getUserById(Integer id) {
         User user = userRepository.findById(id).orElse(null);
         return dtoMapper.map(user, UserDTO.class);
     }
 
+    @Transactional
     public UserDTO saveUser(RegisterUserDTO registerUserDTO) {
         if (userRepository.existsByEmail(registerUserDTO.getEmail())) {
             throw new IllegalArgumentException("Email already exists");

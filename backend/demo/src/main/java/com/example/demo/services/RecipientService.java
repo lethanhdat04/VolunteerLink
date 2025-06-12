@@ -4,6 +4,7 @@ import com.example.demo.dtos.RecipientDTO;
 import com.example.demo.enities.Recipient;
 import com.example.demo.repositories.RecipientRepository;
 import com.example.demo.utils.DtoMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,14 +20,17 @@ public class RecipientService {
         this.dtoMapper = dtoMapper;
     }
 
+    @Transactional
     public List<RecipientDTO> getAllRecipient() {
         return dtoMapper.mapList(recipientRepository.findAll(), RecipientDTO.class);
     }
 
+    @Transactional
     public RecipientDTO getRecipientById(Integer id) {
         return dtoMapper.map(recipientRepository.findById(id).orElse(null), RecipientDTO.class);
     }
 
+    @Transactional
     public RecipientDTO updateRecipient(RecipientDTO recipientDTO) {
         Recipient recipient = recipientRepository.findById(recipientDTO.getId()).orElseThrow(() -> new RuntimeException("Recipient not found"));
         recipient.setUpdateAt(LocalDateTime.now());

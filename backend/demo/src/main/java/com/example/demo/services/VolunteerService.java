@@ -6,6 +6,7 @@ import com.example.demo.enums.SkillEnum;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.VolunteerRepository;
 import com.example.demo.utils.DtoMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,11 +23,13 @@ public class VolunteerService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional
     public List<VolunteerDTO> getAllVolunteer() {
         List<Volunteer> volunteers = volunteerRepository.findAll();
         return dtoMapper.mapList(volunteers, VolunteerDTO.class);
     }
 
+    @Transactional
     public VolunteerDTO getVolunteerById(Integer id) {
         Volunteer volunteer = volunteerRepository.findById(id).orElse(null);
         return dtoMapper.map(volunteer, VolunteerDTO.class);
@@ -46,6 +49,7 @@ public class VolunteerService {
 //        return dtoMapper.map(volunteer, VolunteerDTO.class);
 //    }
 
+    @Transactional
     public VolunteerDTO updateVolunteer(Integer id, VolunteerDTO volunteerDTO) {
         if (id == null) {
             throw new IllegalArgumentException("Volunteer id is null");
@@ -68,6 +72,7 @@ public class VolunteerService {
         return dtoMapper.map(updatedVolunteer, VolunteerDTO.class);
     }
 
+    @Transactional
     public List<VolunteerDTO> getVolunteersBySkill(SkillEnum skill) {
         List<Volunteer> volunteers = volunteerRepository.findBySkillsContaining(skill);
         return dtoMapper.mapList(volunteers, VolunteerDTO.class);

@@ -6,6 +6,7 @@ import com.example.demo.repositories.EventRepository;
 import com.example.demo.repositories.OrganizationRepository;
 import com.example.demo.repositories.VolunteerRepository;
 import com.example.demo.utils.DtoMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,16 +29,19 @@ public class EventService {
         this.volunteerRepository = volunteerRepository;
     }
 
+    @Transactional
     public List<EventDTO> getAllEvent() {
         List<Event> events = eventRepository.findAll();
         return dtoMapper.mapList(events, EventDTO.class);
     }
 
+    @Transactional
     public EventDTO getEventById(Integer id) {
         Event event = eventRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
         return dtoMapper.map(event, EventDTO.class);
     }
 
+    @Transactional
     public EventDTO createEvent(EventDTO eventDTO) {
         Event event = dtoMapper.map(eventDTO, Event.class);
         event = eventRepository.save(event);
@@ -46,6 +50,7 @@ public class EventService {
     }
 
 
+    @Transactional
     public EventDTO updateEvent(EventDTO eventDTO) {
         if (eventDTO.getId() == null) {
             throw new IllegalArgumentException("Event id is null");
@@ -64,16 +69,19 @@ public class EventService {
         return dtoMapper.map(updatedEvent, EventDTO.class);
     }
 
+    @Transactional
     public List<EventDTO> findByOrganizationId(Integer organizationId) {
         List<Event> events = eventRepository.findByOrganizationId(organizationId);
         return dtoMapper.mapList(events, EventDTO.class);
     }
 
+    @Transactional
     public List<EventDTO> findByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         List<Event> events = eventRepository.findByStartTimeBetween(startDate, endDate);
         return dtoMapper.mapList(events, EventDTO.class);
     }
 
+    @Transactional
     public ResponseEntity<Void> deleteEvent(Integer eventId) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
         eventRepository.delete(event);

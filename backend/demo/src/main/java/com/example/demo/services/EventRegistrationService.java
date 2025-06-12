@@ -51,17 +51,20 @@ public class EventRegistrationService {
         return dtoMapper.map(savedEntity, EventRegistrationDTO.class);
     }
 
+    @Transactional
     public EventRegistrationDTO getRegistrationById(Integer id) {
         EventRegistration eventRegistration = eventRegistrationRepository.findById(id).orElseThrow(() -> new RuntimeException("Registration not found"));
         return dtoMapper.map(eventRegistration, EventRegistrationDTO.class);
     }
 
+    @Transactional
     public List<EventRegistrationDTO> getRegistrationsForEvent(Integer eventId) {
         eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found"));
         List<EventRegistration> eventRegistrations = eventRegistrationRepository.findAllByEventId(eventId);
         return dtoMapper.mapList(eventRegistrations, EventRegistrationDTO.class);
     }
 
+    @Transactional
     public List<EventRegistrationDTO> getRegistrationsForVolunteer(Integer volunteerId) {
         volunteerRepository.findById(volunteerId).orElseThrow(() -> new RuntimeException("Volunteer not found"));
         List<EventRegistration> eventRegistrations = eventRegistrationRepository.findAllByVolunteerId(volunteerId);
@@ -74,7 +77,7 @@ public class EventRegistrationService {
             throw new IllegalArgumentException("Registration id is null");
         }
         EventRegistration eventRegistration = eventRegistrationRepository.findById(eventRegistrationDTO.getId()).orElseThrow(() -> new RuntimeException("Registration not found"));
-        eventRegistration.setRegistrationTime(eventRegistrationDTO.getRegistrationDate());
+        eventRegistration.setRegistrationTime(eventRegistrationDTO.getRegistrationTime());
         eventRegistration.setStatus(eventRegistrationDTO.getStatus());
 //        eventRegistration.setReview(eventRegistrationDTO.getReview());
         eventRegistration.setRating(eventRegistrationDTO.getRating());
