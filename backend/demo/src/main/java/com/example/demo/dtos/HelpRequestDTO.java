@@ -46,6 +46,11 @@ public class HelpRequestDTO {
         this.createAt = helpRequest.getCreateAt();
         this.updateAt = helpRequest.getUpdateAt();
         this.requiredSkills = helpRequest.getRequiredSkills();
+        this.location = helpRequest.getLocation();
+        this.startTime = helpRequest.getStartTime();
+        this.endTime = helpRequest.getEndTime();
+        this.priority = helpRequest.getPriority();
+        this.estimatedTime = helpRequest.getEstimatedTime();
 
         if (helpRequest.getRecipient() != null) {
             this.recipientId = helpRequest.getRecipient().getId();

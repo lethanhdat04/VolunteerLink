@@ -32,7 +32,7 @@ public class HelpRequestController {
     }
 
     @PostMapping
-    public ResponseEntity<HelpRequestDTO> createRequest(@RequestBody CreateHelpRequestDTO helpRequestDTO) {
+    public ResponseEntity<HelpRequestDTO> createRequest(@RequestBody HelpRequestDTO helpRequestDTO) {
         return ResponseEntity.ok(helpRequestService.createRequest(helpRequestDTO));
     }
 

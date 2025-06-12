@@ -53,7 +53,7 @@ public class HelpRequestService {
     }
 
     @Transactional
-    public HelpRequestDTO createRequest(CreateHelpRequestDTO requestDTO) {
+    public HelpRequestDTO createRequest(HelpRequestDTO requestDTO) {
         HelpRequest helpRequest = dtoMapper.map(requestDTO, HelpRequest.class);
         Recipient recipient = recipientRepository.findById(requestDTO.getRecipientId()).orElseThrow(() -> new RuntimeException("Recipient not found"));
         helpRequest.setTitle(requestDTO.getTitle());
