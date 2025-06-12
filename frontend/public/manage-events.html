@@ -33,10 +33,9 @@
             color: #aaa;
         }
 
-        /* >>> Mới: placeholder phải tương phản rõ */
+        /* placeholder phải tương phản rõ */
         .form-section .form-control::placeholder,
         .form-section textarea::placeholder {
-            /* Màu sáng, độ mờ 100% */
             color: #bbb !important;
             opacity: 1 !important;
         }
@@ -140,7 +139,7 @@
 <script>
     (function(){
         const BASE = 'http://localhost:8080';
-        const ORG_ID = 1;
+        const ORG_ID = 2;  // luôn để organizationId = 2
         const token = localStorage.getItem('accessToken');
         if (!token) { alert('Bạn chưa đăng nhập hoặc phiên hết hạn.'); return; }
 
@@ -219,10 +218,16 @@
         async function confirmDelete(id,title){
             if (!confirm(`Xóa sự kiện "${title}"?`)) return;
             try {
-                const res = await fetch(`${BASE}/events/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});
+                const res = await fetch(`${BASE}/events/${id}`,{
+                    method:'DELETE',
+                    headers:{ 'Authorization':`Bearer ${token}` }
+                });
                 if (!res.ok) throw new Error(res.status);
                 loadEvents();
-            } catch (e) { console.error(e); alert('Xóa thất bại.'); }
+            } catch (e) {
+                console.error(e);
+                alert('Xóa thất bại.');
+            }
         }
 
         eventForm.addEventListener('submit',async ev=>{
@@ -241,7 +246,10 @@
                 btnSubmitForm.disabled = true;
                 const res = await fetch(`${BASE}/events/create`,{
                     method:'POST',
-                    headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+                    headers:{
+                        'Content-Type':'application/json',
+                        'Authorization':`Bearer ${token}`
+                    },
                     body: JSON.stringify(body)
                 });
                 if (!res.ok) throw new Error(res.status);
