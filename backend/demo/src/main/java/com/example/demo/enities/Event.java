@@ -33,10 +33,10 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventStatusEnum status;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<EventRegistration> getRegistrations = new HashSet<>();
 }
