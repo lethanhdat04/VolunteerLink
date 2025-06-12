@@ -12,6 +12,7 @@ import com.example.demo.repositories.OrganizationRepository;
 import com.example.demo.repositories.RecipientRepository;
 import com.example.demo.repositories.VolunteerRepository;
 import com.example.demo.utils.DtoMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,7 @@ public class HelpRequestService {
         this.dtoMapper = dtoMapper;
     }
 
+    @Transactional
     public List<HelpRequestDTO> getAllHelpRequest() {
         List<HelpRequest> helpRequests = helpRequestRepository.findAll();
         List<HelpRequestDTO> helpRequestDTOS = new ArrayList<>();
@@ -44,11 +46,13 @@ public class HelpRequestService {
         return helpRequestDTOS;
     }
 
+    @Transactional
     public HelpRequestDTO getHelpRequestById(Integer id) {
         HelpRequest helpRequest = helpRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Help request not found"));
         return new HelpRequestDTO(helpRequest);
     }
 
+    @Transactional
     public HelpRequestDTO createRequest(CreateHelpRequestDTO requestDTO) {
         HelpRequest helpRequest = dtoMapper.map(requestDTO, HelpRequest.class);
         Recipient recipient = recipientRepository.findById(requestDTO.getRecipientId()).orElseThrow(() -> new RuntimeException("Recipient not found"));
@@ -66,6 +70,7 @@ public class HelpRequestService {
         return new HelpRequestDTO(updated);
     }
 
+    @Transactional
     public HelpRequestDTO updateRequest(Integer id, HelpRequestDTO helpRequestDTO) {
         HelpRequest helpRequest = helpRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Help request not found"));
         helpRequest.setUpdateAt(LocalDateTime.now());
@@ -79,6 +84,7 @@ public class HelpRequestService {
         return new HelpRequestDTO(updated);
     }
 
+    @Transactional
     public List<HelpRequestDTO> findByRecipientId(Integer recipientId) {
         List<HelpRequest> helpRequests = helpRequestRepository.findByRecipientId(recipientId);
         List<HelpRequestDTO> helpRequestDTOS = new ArrayList<>();
@@ -88,6 +94,7 @@ public class HelpRequestService {
         return helpRequestDTOS;
     }
 
+    @Transactional
     public List<HelpRequestDTO> findByStatus(HelpRequestStatusEnum status) {
         List<HelpRequest> helpRequests = helpRequestRepository.findByStatus(status);
         List<HelpRequestDTO> helpRequestDTOS = new ArrayList<>();
@@ -97,6 +104,7 @@ public class HelpRequestService {
         return helpRequestDTOS;
     }
 
+    @Transactional
     public List<HelpRequestDTO> findByPriority(PriorityEnum priority) {
         List<HelpRequest> helpRequests = helpRequestRepository.findByPriority(priority);
         List<HelpRequestDTO> helpRequestDTOS = new ArrayList<>();
@@ -106,6 +114,7 @@ public class HelpRequestService {
         return helpRequestDTOS;
     }
 
+    @Transactional
     public HelpRequestDTO approveRequest(Integer requestId) {
         HelpRequest helpRequest = helpRequestRepository.findById(requestId).orElseThrow(() -> new RuntimeException("Help request not found"));
         helpRequest.setStatus(HelpRequestStatusEnum.ACCEPTED);
@@ -113,6 +122,7 @@ public class HelpRequestService {
         return new HelpRequestDTO(helpRequestRepository.save(helpRequest));
     }
 
+    @Transactional
     public HelpRequestDTO rejectRequest(Integer requestId) {
         HelpRequest helpRequest = helpRequestRepository.findById(requestId).orElseThrow(() -> new RuntimeException("Help request not found"));
         helpRequest.setStatus(HelpRequestStatusEnum.REJECTED);

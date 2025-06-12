@@ -4,12 +4,16 @@ import com.example.demo.enities.HelpRequest;
 import com.example.demo.enums.HelpRequestStatusEnum;
 import com.example.demo.enums.PriorityEnum;
 import com.example.demo.enums.SkillEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class HelpRequestDTO {
     private Integer id;
     private String title;
