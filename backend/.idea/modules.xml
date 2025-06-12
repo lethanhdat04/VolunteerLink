@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/VolunteerLink.iml" filepath="$PROJECT_DIR$/VolunteerLink.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/backend_itss.iml" filepath="$PROJECT_DIR$/.idea/backend_itss.iml" />
-      <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
     </modules>
   </component>
 </project>
