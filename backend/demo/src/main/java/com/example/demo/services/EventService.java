@@ -2,20 +2,17 @@ package com.example.demo.services;
 
 import com.example.demo.dtos.EventDTO;
 import com.example.demo.enities.Event;
-import com.example.demo.enities.Volunteer;
 import com.example.demo.repositories.EventRepository;
 import com.example.demo.repositories.OrganizationRepository;
 import com.example.demo.repositories.VolunteerRepository;
 import com.example.demo.utils.DtoMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -77,8 +74,9 @@ public class EventService {
         return dtoMapper.mapList(events, EventDTO.class);
     }
 
-    public void deleteEvent(Integer eventId) {
+    public ResponseEntity<Void> deleteEvent(Integer eventId) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
         eventRepository.delete(event);
+        return null;
     }
 }
