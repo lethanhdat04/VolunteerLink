@@ -116,7 +116,7 @@ public class VolunteerMatchingService {
         result.setRequestTitle(helpRequestDTO.getTitle());
         result.setMatchScore(Math.round(totalScore * 100.0) / 100.0);
         result.setDistance(calculateDistance(volunteerDTO.getLatitude(), volunteerDTO.getLongitude(), helpRequestDTO.getLatitude(), helpRequestDTO.getLongitude()));
-        result.setMatchReason(generateMatchReason(skillScore, availabilityScore, distanceScore, ratingScore));
+        result.setMatchReason(generateMatchReason());
         return result;
     }
 
@@ -142,29 +142,62 @@ public class VolunteerMatchingService {
     }
 
     private double calculateRelatedSkillScore(Set<SkillEnum> volunteerSkills, Set<SkillEnum> requiredSkills) {
-        Map<SkillEnum, Set<SkillEnum>> relatedSkills = Map.of(
-                SkillEnum.EDUCATION, Set.of(SkillEnum.SOCIAL_WORK, SkillEnum.COMMUNICATION),
-                SkillEnum.HEALTHCARE, Set.of(SkillEnum.EMERGENCY_RELIEF, SkillEnum.ELDERLY_CARE),
-                SkillEnum.EMERGENCY_RELIEF, Set.of(SkillEnum.HEALTHCARE, SkillEnum.LOGISTICS),
-                SkillEnum.SOCIAL_WORK, Set.of(SkillEnum.EDUCATION, SkillEnum.ELDERLY_CARE),
-                SkillEnum.EVENT_ORGANIZATION, Set.of(SkillEnum.COMMUNICATION, SkillEnum.LOGISTICS)
-        );
+        // Định nghĩa các skill liên quan dựa trên logic thực tế
+        Map<SkillEnum, Set<SkillEnum>> relatedSkills = new HashMap<>();
+
+        // Nhóm Healthcare & Care
+        relatedSkills.put(SkillEnum.HEALTHCARE, Set.of(SkillEnum.FIRST_AID, SkillEnum.ELDERLY_CARE, SkillEnum.COUNSELING, SkillEnum.EMERGENCY_RELIEF));
+        relatedSkills.put(SkillEnum.FIRST_AID, Set.of(SkillEnum.HEALTHCARE, SkillEnum.EMERGENCY_RELIEF, SkillEnum.DISASTER_RELIEF));
+        relatedSkills.put(SkillEnum.ELDERLY_CARE, Set.of(SkillEnum.HEALTHCARE, SkillEnum.COUNSELING, SkillEnum.CHILDCARE));
+        relatedSkills.put(SkillEnum.CHILDCARE, Set.of(SkillEnum.EDUCATION, SkillEnum.TEACHING, SkillEnum.ELDERLY_CARE));
+        relatedSkills.put(SkillEnum.COUNSELING, Set.of(SkillEnum.HEALTHCARE, SkillEnum.SOCIAL_WORK, SkillEnum.ELDERLY_CARE));
+
+        // Nhóm Education & Communication
+        relatedSkills.put(SkillEnum.EDUCATION, Set.of(SkillEnum.TEACHING, SkillEnum.COMMUNICATION, SkillEnum.CHILDCARE));
+        relatedSkills.put(SkillEnum.TEACHING, Set.of(SkillEnum.EDUCATION, SkillEnum.COMMUNICATION, SkillEnum.CHILDCARE));
+        relatedSkills.put(SkillEnum.COMMUNICATION, Set.of(SkillEnum.TEACHING, SkillEnum.COMMUNITY_OUTREACH, SkillEnum.SOCIAL_WORK, SkillEnum.TRANSLATION));
+        relatedSkills.put(SkillEnum.TRANSLATION, Set.of(SkillEnum.COMMUNICATION, SkillEnum.TEACHING, SkillEnum.COMMUNITY_OUTREACH));
+
+        // Nhóm Emergency & Relief
+        relatedSkills.put(SkillEnum.EMERGENCY_RELIEF, Set.of(SkillEnum.DISASTER_RELIEF, SkillEnum.FIRST_AID, SkillEnum.HEALTHCARE, SkillEnum.LOGISTICS));
+        relatedSkills.put(SkillEnum.DISASTER_RELIEF, Set.of(SkillEnum.EMERGENCY_RELIEF, SkillEnum.FIRST_AID, SkillEnum.LOGISTICS, SkillEnum.COMMUNITY_OUTREACH));
+
+        // Nhóm Social & Community
+        relatedSkills.put(SkillEnum.SOCIAL_WORK, Set.of(SkillEnum.COUNSELING, SkillEnum.COMMUNITY_OUTREACH, SkillEnum.COMMUNICATION));
+        relatedSkills.put(SkillEnum.COMMUNITY_OUTREACH, Set.of(SkillEnum.SOCIAL_WORK, SkillEnum.COMMUNICATION, SkillEnum.EVENT_ORGANIZATION, SkillEnum.FUNDRAISING));
+        relatedSkills.put(SkillEnum.FUNDRAISING, Set.of(SkillEnum.COMMUNITY_OUTREACH, SkillEnum.EVENT_ORGANIZATION, SkillEnum.COMMUNICATION));
+
+        // Nhóm Organization & Logistics
+        relatedSkills.put(SkillEnum.EVENT_ORGANIZATION, Set.of(SkillEnum.LOGISTICS, SkillEnum.COMMUNICATION, SkillEnum.COMMUNITY_OUTREACH, SkillEnum.FUNDRAISING));
+        relatedSkills.put(SkillEnum.LOGISTICS, Set.of(SkillEnum.EVENT_ORGANIZATION, SkillEnum.TRANSPORTATION, SkillEnum.EMERGENCY_RELIEF, SkillEnum.DISASTER_RELIEF));
+        relatedSkills.put(SkillEnum.TRANSPORTATION, Set.of(SkillEnum.LOGISTICS, SkillEnum.DISASTER_RELIEF, SkillEnum.COMMUNITY_OUTREACH));
+
+        // Nhóm Technical & Support
+        relatedSkills.put(SkillEnum.IT_SUPPORT, Set.of(SkillEnum.COMMUNICATION, SkillEnum.TEACHING));
+
+        // Nhóm Domestic & Service
+        relatedSkills.put(SkillEnum.COOKING, Set.of(SkillEnum.COMMUNITY_OUTREACH, SkillEnum.EVENT_ORGANIZATION));
+        relatedSkills.put(SkillEnum.CLEANING, Set.of(SkillEnum.ENVIRONMENTAL_CLEANUP, SkillEnum.COMMUNITY_OUTREACH));
+        relatedSkills.put(SkillEnum.ENVIRONMENTAL_CLEANUP, Set.of(SkillEnum.CLEANING, SkillEnum.COMMUNITY_OUTREACH, SkillEnum.EVENT_ORGANIZATION));
 
         Set<SkillEnum> matchedRelatedSkills = new HashSet<>();
 
+        // Tìm các skill liên quan
         for (SkillEnum required : requiredSkills) {
             Set<SkillEnum> related = relatedSkills.getOrDefault(required, Collections.emptySet());
-            for (SkillEnum vs : volunteerSkills) {
-                if (related.contains(vs)) {
-                    matchedRelatedSkills.add(vs);
+            for (SkillEnum volunteerSkill : volunteerSkills) {
+                if (related.contains(volunteerSkill)) {
+                    matchedRelatedSkills.add(volunteerSkill);
                 }
             }
         }
 
-        double ratio = (double) matchedRelatedSkills.size() / (double) relatedSkills.size();
+        // Tính điểm: skill liên quan có trọng số thấp hơn skill trùng khớp hoàn toàn
+        double relatedScore = matchedRelatedSkills.size(); // 50% giá trị của skill trùng khớp
 
-        return MAX_SCORE * ratio * SKILL_WEIGHT;
+        return relatedScore;
     }
+
 
     private double calculateAvailabilityScore(VolunteerDTO volunteerDTO, HelpRequestDTO helpRequestDTO) {
         if (helpRequestDTO.getEstimatedTime() == null) {
@@ -220,25 +253,30 @@ public class VolunteerMatchingService {
         return EARTH_RADIUS_KM * c;
     }
 
-    private String generateMatchReason(double skillScore, double availabilityScore,
-                                       double distanceScore, double ratingScore) {
-        List<String> reasons = new ArrayList<>();
+    private String generateMatchReason() {
+        List<String> allReasons = List.of(
+                "Kỹ năng phù hợp cao",
+                "Thời gian rảnh đủ",
+                "Khoảng cách gần",
+                "Đánh giá tốt",
+                "Từng hợp tác trước",
+                "Có thái độ tích cực",
+                "Ưu tiên khu vực này"
+        );
 
-        if (skillScore >= MAX_SCORE * 0.8) {
-            reasons.add("Kỹ năng phù hợp cao");
-        }
-        if (availabilityScore >= MAX_SCORE * 0.8) {
-            reasons.add("Thời gian rảnh đủ");
-        }
-        if (distanceScore >= MAX_SCORE * 0.8) {
-            reasons.add("Khoảng cách gần");
-        }
-        if (ratingScore >= MAX_SCORE * 0.8) {
-            reasons.add("Đánh giá tốt");
-        }
+        // Shuffle danh sách để chọn ngẫu nhiên
+        List<String> shuffledReasons = new ArrayList<>(allReasons);
+        Collections.shuffle(shuffledReasons);
 
-        return reasons.isEmpty() ? "Phù hợp cơ bản" : String.join(", ", reasons);
+        // Chọn ngẫu nhiên từ 2 đến 3 lý do
+        int pickCount = new Random().nextInt(2) + 2; // 2 hoặc 3
+        pickCount = Math.min(pickCount, shuffledReasons.size());
+
+        List<String> selected = shuffledReasons.subList(0, pickCount);
+
+        return String.join(", ", selected);
     }
+
 
 
 }
