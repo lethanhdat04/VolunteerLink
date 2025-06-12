@@ -9,6 +9,7 @@ public class RecipientDTO {
     private String fullName;
     private String email;
     private String phoneNumber;
-    private String address;
+    private Double longitude;
+    private Double latitude;
     private UserStatusEnum status;
 }

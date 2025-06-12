@@ -76,4 +76,9 @@ public class EventService {
         List<Event> events = eventRepository.findByStartTimeBetween(startDate, endDate);
         return dtoMapper.mapList(events, EventDTO.class);
     }
+
+    public void deleteEvent(Integer eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
+        eventRepository.delete(event);
+    }
 }
