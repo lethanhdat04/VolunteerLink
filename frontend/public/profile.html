@@ -200,7 +200,7 @@
 
         // Fetch profile
         try {
-            const res = await fetch('http://localhost:8080/volunteers/12', {
+            const res = await fetch('http://localhost:8080/volunteers/5', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (!res.ok) throw new Error(res.status);
@@ -327,7 +327,7 @@
             };
 
             try {
-                const resPut = await fetch('http://localhost:8080/volunteers/12/update', {
+                const resPut = await fetch('http://localhost:8080/volunteers/5/update', {
                     method:  'PUT',
                     headers: {
                         'Content-Type': 'application/json',

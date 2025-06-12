@@ -16,7 +16,7 @@
                 <li class="nav-item"><a class="nav-link" href="dashboard-organization.html">Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" href="manage-events.html">Quản lý sự kiện</a></li>
                 <li class="nav-item"><a class="nav-link" href="stats-organization.html">Thống kê</a></li>
-                <li class="nav-item"><a class="nav-link" href="org-profile.html">Hồ sơ</a></li>
+                <li class="nav-item"><a class="nav-link active" href="org-profile.html">Hồ sơ</a></li>
             </ul>
         </div>
         <a class="nav-link" href="#" id="btnLogout"><span class="material-symbols-outlined">logout</span></a>
@@ -24,112 +24,93 @@
 </nav>
 
 <div class="container my-5">
-    <h2 class="mb-4 text-center">Hồ sơ Tổ chức</h2>
-    <div id="profile" class="card p-4" style="max-width:600px; margin:auto; display:none;">
-        <h4 id="orgName" class="card-title"></h4>
-        <p id="orgDesc" class="card-text"></p>
-        <ul class="list-group list-group-flush mb-3">
-            <li class="list-group-item"><strong>ID:</strong> <span id="orgId"></span></li>
-            <li class="list-group-item"><strong>Account ID:</strong> <span id="accountId"></span></li>
-            <li class="list-group-item"><strong>Liên hệ:</strong> <span id="contactInfo"></span></li>
-            <li class="list-group-item"><strong>Địa chỉ:</strong> <span id="address"></span></li>
-            <li class="list-group-item"><strong>Chuyên ngành:</strong> <span id="category"></span></li>
-            <li class="list-group-item">
-                <strong>Đã xác thực:</strong>
-                <span id="verified" class="badge"></span>
-            </li>
-        </ul>
-        <button id="editBtn" class="btn btn-primary w-100">Chỉnh sửa hồ sơ</button>
-    </div>
+    <h2 class="profile-title text-center mb-5">Hồ sơ Tổ chức</h2>
 
     <!-- Spinner loading -->
     <div id="loading" class="text-center py-5">
         <div class="spinner-border text-primary" role="status"></div>
         <p>Đang tải thông tin…</p>
     </div>
-</div>
 
-<!-- Modal Chỉnh sửa -->
-<div class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog">
-        <form id="editForm" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Chỉnh sửa hồ sơ</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3"><label class="form-label">Tên</label><input class="form-control" name="name" required></div>
-                <div class="mb-3"><label class="form-label">Mô tả</label><textarea class="form-control" name="description" rows="2"></textarea></div>
-                <div class="mb-3"><label class="form-label">Liên hệ</label><input class="form-control" name="contactInfo"></div>
-                <div class="mb-3"><label class="form-label">Địa chỉ</label><input class="form-control" name="address"></div>
-                <div class="mb-3"><label class="form-label">Chuyên ngành</label><input class="form-control" name="category"></div>
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="verificationStatus" id="verificationStatus">
-                    <label class="form-check-label" for="verificationStatus">Đã xác thực</label>
+    <!-- Nội dung profile -->
+    <div id="profileContent" class="profile-wrapper" style="display: none;">
+        <!-- Khung trái: logo + tên + loại -->
+        <div class="profile-left text-center">
+            <img src="images/org_avt.jpg" alt="Logo" class="profile-avatar" />
+            <h3 id="orgNameDisplay" class="profile-name">–</h3>
+            <span id="orgTypeDisplay" class="profile-role">–</span>
+        </div>
+        <!-- Khung phải: thông tin tĩnh -->
+        <div class="profile-right">
+            <div id="staticInfo">
+                <div class="row gx-4">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label text-secondary">Link tổ chức:</label>
+                        <div>
+                            <a id="staticLink" href="#" target="_blank">–</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label text-secondary">Người đại diện:</label>
+                        <div><span id="staticRep">–</span></div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label text-secondary">Số điện thoại:</label>
+                        <div><span id="staticPhone">–</span></div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label text-secondary">Email:</label>
+                        <div><span id="staticEmail">–</span></div>
+                    </div>
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label text-secondary">Địa chỉ:</label>
+                        <div><span id="staticAddress">–</span></div>
+                    </div>
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label text-secondary">Status:</label>
+                        <div><span id="staticStatus" class="badge bg-success">–</span></div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-success">Lưu</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
+<!-- Bootstrap & init script -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    const orgId = 1; // Thay bằng ID thực lấy từ session
-    (async()=>{
-        try {
-            const res = await fetch(`/organizations/${orgId}`);
-            if(!res.ok) throw new Error('Không tìm thấy tổ chức');
-            const org = await res.json();
+    document.addEventListener('DOMContentLoaded', function() {
+        // Dữ liệu cứng
+        const org = {
+            name: "Hoi Chu Thap Do Viet Nam",
+            description: "Vietnamese Red Cross - Providing humanitarian aid and disaster relief",
+            type: "Healthcare",
+            link: "https://redcross.org.vn",
+            representative: "Thành Đạt",
+            phone: "0902345678",
+            email: "redcross@vietnam.org",
+            address: "Hà Nội",
+            status: "ACTIVE"
+        };
 
-            // Điền thông tin
-            document.getElementById('orgId').textContent          = org.id;
-            document.getElementById('accountId').textContent      = org.accountId;
-            document.getElementById('orgName').textContent        = org.name;
-            document.getElementById('orgDesc').textContent        = org.description;
-            document.getElementById('contactInfo').textContent    = org.contactInfo;
-            document.getElementById('address').textContent        = org.address;
-            document.getElementById('category').textContent       = org.category;
-            const vf = document.getElementById('verified');
-            vf.textContent = org.verificationStatus ? 'Có' : 'Chưa';
-            vf.classList.add(org.verificationStatus ? 'bg-success' : 'bg-danger', 'text-white', 'px-2', 'py-1', 'rounded');
+        // Điền thông tin vào giao diện
+        document.getElementById('orgNameDisplay').textContent = org.name;
+        document.getElementById('orgTypeDisplay').textContent = org.type;
+        const linkEl = document.getElementById('staticLink');
+        linkEl.textContent = org.link;
+        linkEl.href = org.link;
+        document.getElementById('staticRep').textContent = org.representative;
+        document.getElementById('staticPhone').textContent = org.phone;
+        document.getElementById('staticEmail').textContent = org.email;
+        document.getElementById('staticAddress').textContent = org.address;
+        const statusEl = document.getElementById('staticStatus');
+        statusEl.textContent = org.status;
+        statusEl.className = 'badge ' + (org.status === 'ACTIVE' ? 'bg-success' : 'bg-danger');
 
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('profile').style.display = 'block';
-
-            // Chuẩn bị modal sửa
-            document.getElementById('editBtn').onclick = ()=>{
-                const form = document.getElementById('editForm');
-                form.name.value               = org.name;
-                form.description.value        = org.description;
-                form.contactInfo.value        = org.contactInfo;
-                form.address.value            = org.address;
-                form.category.value           = org.category;
-                form.verificationStatus.checked = org.verificationStatus;
-                new bootstrap.Modal(document.getElementById('editModal')).show();
-            };
-
-            // Xử lý lưu
-            document.getElementById('editForm').addEventListener('submit', async e=>{
-                e.preventDefault();
-                const data = Object.fromEntries(new FormData(e.target));
-                data.verificationStatus = data.verificationStatus === 'on';
-                await fetch(`/organizations/${orgId}`, {
-                    method:'PATCH',
-                    headers:{'Content-Type':'application/json'},
-                    body: JSON.stringify(data)
-                });
-                location.reload();
-            });
-
-        } catch(err) {
-            document.getElementById('loading').innerHTML =
-                `<div class="alert alert-danger">Lỗi: ${err.message}</div>`;
-        }
-    })();
+        // Ẩn spinner, hiện nội dung
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('profileContent').style.display = 'flex';
+    });
 </script>
 <script src="auth.js"></script>
 </body>
