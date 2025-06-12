@@ -43,6 +43,57 @@
 
 <div class="container my-4">
     <h2 class="text-center mb-4">Danh sách yêu cầu của bạn</h2>
+
+    <!-- Nút tạo yêu cầu mới -->
+    <div class="text-end mb-3">
+        <button id="btnNewRequest" class="btn btn-primary">Tạo yêu cầu mới</button>
+    </div>
+
+    <!-- Form tạo yêu cầu (ẩn mặc định) -->
+    <div id="newRequestForm" class="card p-3 mb-4" style="display: none;">
+        <h5>Tạo yêu cầu trợ giúp</h5>
+        <form id="formCreate">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="inputTitle" class="form-label">Tiêu đề</label>
+                    <input type="text" id="inputTitle" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="inputLocation" class="form-label">Địa điểm</label>
+                    <input type="text" id="inputLocation" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="inputStart" class="form-label">Thời gian bắt đầu</label>
+                    <input type="datetime-local" id="inputStart" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="inputEnd" class="form-label">Thời gian kết thúc</label>
+                    <input type="datetime-local" id="inputEnd" class="form-control" required>
+                </div>
+                <div class="col-12">
+                    <label for="inputDesc" class="form-label">Mô tả</label>
+                    <textarea id="inputDesc" class="form-control" rows="2" required></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label for="inputSkills" class="form-label">Kỹ năng (phân cách ,)</label>
+                    <input type="text" id="inputSkills" class="form-control" placeholder="Ví dụ: COOKING,TEACHING" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="selectPriority" class="form-label">Độ ưu tiên</label>
+                    <select id="selectPriority" class="form-select" required>
+                        <option value="LOW" selected>LOW</option>
+                        <option value="MEDIUM">MEDIUM</option>
+                        <option value="HIGH">HIGH</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3 text-end">
+                <button type="button" id="btnCancelCreate" class="btn btn-secondary me-2">Hủy</button>
+                <button type="submit" class="btn btn-success">Đăng ký</button>
+            </div>
+        </form>
+    </div>
+
     <div class="row g-4" id="requestsRow">
         <!-- Các card sẽ được render tại đây -->
     </div>
@@ -57,40 +108,84 @@
             return;
         }
 
-        try {
-            const res = await fetch('http://localhost:8080/help-requests/recipient/10', {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!res.ok) {
-                console.error('Lỗi khi lấy danh sách yêu cầu:', res.status);
-                return;
-            }
-            const data = await res.json(); // giả sử là mảng các help-request
-            const container = document.getElementById('requestsRow');
+        const recipientId = 10; // cố định
+        const container = document.getElementById('requestsRow');
 
-            data.forEach(req => {
-                const col = document.createElement('div');
-                col.className = 'col-md-6 mb-4';
-                col.innerHTML = `
-                <div class="card p-3 h-100 request-card">
-                    <h5 class="card-title">${req.title}</h5>
-                    <p class="mt-2 mb-1">${req.description}</p>
-                    <p class="mb-1"><strong>Bắt đầu:</strong> ${formatDateTime(req.startTime)}</p>
-                    <p class="mb-1"><strong>Kết thúc:</strong> ${formatDateTime(req.endTime)}</p>
-                    <span class="badge-status badge ${getStatusClass(req.status)}">${req.status}</span>
-                    <span class="badge-priority badge ${getPriorityClass(req.priority)}">${req.priority}</span>
-                </div>
-            `;
-                col.querySelector('.request-card').ondblclick = () => {
-                    window.location.href = `help-recipient-detail.html?id=${encodeURIComponent(req.id)}`;
-                };
-                container.appendChild(col);
-            });
-        } catch (err) {
-            console.error('Không thể kết nối API:', err);
+        // Hiển thị / ẩn form tạo mới
+        document.getElementById('btnNewRequest').onclick = () => {
+            document.getElementById('newRequestForm').style.display = 'block';
+        };
+        document.getElementById('btnCancelCreate').onclick = () => {
+            document.getElementById('formCreate').reset();
+            document.getElementById('newRequestForm').style.display = 'none';
+        };
+
+        // Tạo hàm load lại danh sách
+        async function loadRequests() {
+            container.innerHTML = '';
+            try {
+                const res = await fetch(`http://localhost:8080/help-requests/recipient/${recipientId}`, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error(res.status);
+                const data = await res.json();
+                data.forEach(req => {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-6 mb-4';
+                    col.innerHTML = `
+                  <div class="card p-3 h-100 request-card">
+                      <h5 class="card-title">${req.title}</h5>
+                      <p class="mt-2 mb-1">${req.description}</p>
+                      <p class="mb-1"><strong>Bắt đầu:</strong> ${formatDateTime(req.startTime)}</p>
+                      <p class="mb-1"><strong>Kết thúc:</strong> ${formatDateTime(req.endTime)}</p>
+                      <span class="badge-status badge ${getStatusClass(req.status)}">${req.status}</span>
+                      <span class="badge-priority badge ${getPriorityClass(req.priority)}">${req.priority}</span>
+                  </div>`;
+                    col.querySelector('.request-card').ondblclick = () => {
+                        window.location.href = `help-recipient-detail.html?id=${encodeURIComponent(req.id)}`;
+                    };
+                    container.appendChild(col);
+                });
+            } catch (err) {
+                console.error('Không thể kết nối API:', err);
+            }
         }
 
+        // Xử lý submit form tạo mới
+        document.getElementById('formCreate').addEventListener('submit', async ev => {
+            ev.preventDefault();
+            const body = {
+                recipientId,
+                title: document.getElementById('inputTitle').value.trim(),
+                description: document.getElementById('inputDesc').value.trim(),
+                requiredSkills: document.getElementById('inputSkills').value.split(',').map(s=>s.trim()),
+                location: document.getElementById('inputLocation').value.trim(),
+                priority: document.getElementById('selectPriority').value,
+                startTime: new Date(document.getElementById('inputStart').value).toISOString(),
+                endTime: new Date(document.getElementById('inputEnd').value).toISOString()
+            };
+            try {
+                const res = await fetch('http://localhost:8080/help-requests', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type':'application/json',
+                        'Authorization':`Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (!res.ok) throw new Error(res.status);
+                // ẩn form + reload
+                document.getElementById('formCreate').reset();
+                document.getElementById('newRequestForm').style.display = 'none';
+                loadRequests();
+            } catch (err) {
+                console.error('Tạo yêu cầu thất bại:', err);
+                alert('Không tạo được yêu cầu. Vui lòng thử lại.');
+            }
+        });
+
+        // Helpers
         function getStatusClass(status) {
             switch(status) {
                 case 'PENDING':   return 'bg-warning text-dark';
@@ -100,7 +195,6 @@
                 default:          return 'bg-light text-dark';
             }
         }
-
         function getPriorityClass(priority) {
             switch(priority) {
                 case 'HIGH':   return 'bg-danger text-white';
@@ -109,14 +203,18 @@
                 default:       return 'bg-light text-dark';
             }
         }
-
         function formatDateTime(iso) {
+            if (!iso) return '–';
             const d = new Date(iso);
             return d.toLocaleString('vi-VN', {
-                day: '2-digit', month: '2-digit', year: 'numeric',
-                hour: '2-digit', minute: '2-digit'
+                day:'2-digit',month:'2-digit',year:'numeric',
+                hour:'2-digit',minute:'2-digit'
             });
         }
+
+        // Khởi đầu: load
+        loadRequests();
+
     })();
 </script>
 <script src="auth.js"></script>

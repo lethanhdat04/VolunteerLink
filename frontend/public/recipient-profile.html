@@ -40,12 +40,7 @@
 
     <div id="profileContent" class="profile-wrapper" style="display: none;">
         <div class="profile-left">
-            <img
-                    src="images/avatar.jpg"
-                    alt="Avatar"
-                    id="avatarImg"
-                    class="profile-avatar"
-            />
+            <img src="images/avatar.jpg" alt="Avatar" id="avatarImg" class="profile-avatar" />
             <h3 id="fullNameDisplay" class="profile-name">–</h3>
             <span id="roleDisplay" class="profile-role">–</span>
         </div>
@@ -91,10 +86,16 @@
                         <label for="phoneNumber" class="form-label">Số điện thoại</label>
                         <input type="text" class="form-control" id="phoneNumber" />
                     </div>
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Địa chỉ</label>
-                        <input type="text" class="form-control" id="address" />
+                    <!-- Thêm chức năng Check-in tại đây -->
+                    <div class="mb-3 input-group">
+                        <input type="text" id="address" class="form-control" placeholder="Địa chỉ" />
+                        <button type="button" id="btnCheckin" class="btn btn-outline-secondary">
+                            <span class="material-symbols-outlined">location_on</span>
+                        </button>
                     </div>
+                    <input type="hidden" id="latitude" />
+                    <input type="hidden" id="longitude" />
+
                     <div class="mb-3">
                         <label for="status" class="form-label">Status</label>
                         <select class="form-select" id="status">
@@ -135,6 +136,9 @@
         const emailInput        = document.getElementById('email');
         const phoneNumberInput  = document.getElementById('phoneNumber');
         const addressInput      = document.getElementById('address');
+        const btnCheckin        = document.getElementById('btnCheckin');
+        const latitudeInput     = document.getElementById('latitude');
+        const longitudeInput    = document.getElementById('longitude');
         const statusInput       = document.getElementById('status');
 
         const token = localStorage.getItem('accessToken');
@@ -143,21 +147,19 @@
             return;
         }
 
-        let recipientData;
+        let recipientData, lat = null, lon = null;
+
+        // Fetch profile recipient
         try {
             const res = await fetch('http://localhost:8080/recipients/10', {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (!res.ok) {
-                console.error('Lỗi khi lấy thông tin recipient:', res.status);
-                alert('Không thể tải thông tin hồ sơ.');
-                return;
-            }
+            if (!res.ok) throw new Error(res.status);
             recipientData = await res.json();
         } catch (err) {
-            console.error('Lỗi kết nối khi lấy recipient info:', err);
-            alert('Không thể kết nối tới server.');
+            console.error(err);
+            alert('Không thể tải thông tin hồ sơ.');
             return;
         } finally {
             loadingEl.style.display = 'none';
@@ -170,12 +172,30 @@
         staticFullName.textContent    = recipientData.fullName;
         staticEmail.textContent       = recipientData.email;
         staticPhoneNumber.textContent = recipientData.phoneNumber;
-        staticAddress.textContent     = recipientData.address ?? '';
+        staticAddress.textContent     = recipientData.address
+            ?? (recipientData.latitude!=null && recipientData.longitude!=null
+                ? `${recipientData.latitude}, ${recipientData.longitude}`
+                : '');
         staticStatus.textContent      = recipientData.status;
-        staticStatus.className        = recipientData.status === 'ACTIVE'
+        staticStatus.className        = recipientData.status==='ACTIVE'
             ? 'badge bg-success' : 'badge bg-danger';
 
-        // Edit mode
+        // Check-in geolocation
+        btnCheckin.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                alert('Trình duyệt không hỗ trợ vị trí.');
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(pos => {
+                lat = pos.coords.latitude;
+                lon = pos.coords.longitude;
+                latitudeInput.value  = lat;
+                longitudeInput.value = lon;
+                addressInput.value   = `${lat}, ${lon}`;
+            }, err => alert('Không lấy được vị trí: ' + err.message));
+        });
+
+        // Chuyển sang chế độ edit
         btnEdit.addEventListener('click', () => {
             staticInfo.style.display      = 'none';
             editFormWrapper.style.display = 'block';
@@ -184,6 +204,8 @@
             emailInput.value       = recipientData.email;
             phoneNumberInput.value = recipientData.phoneNumber;
             addressInput.value     = recipientData.address ?? '';
+            latitudeInput.value    = recipientData.latitude;
+            longitudeInput.value   = recipientData.longitude;
             statusInput.value      = recipientData.status;
         });
 
@@ -194,21 +216,23 @@
             updateMsgEl.innerHTML         = '';
         });
 
-        // Lưu
+        // Lưu thay đổi
         document.getElementById('profileForm').addEventListener('submit', async function (ev) {
             ev.preventDefault();
             updateMsgEl.textContent = '';
 
             const bodyData = {
-                fullName:   fullNameInput.value.trim(),
-                email:      emailInput.value.trim(),
-                phoneNumber:phoneNumberInput.value.trim(),
-                address:    addressInput.value.trim(),
-                status:     statusInput.value
+                fullName:    fullNameInput.value.trim(),
+                email:       emailInput.value.trim(),
+                phoneNumber: phoneNumberInput.value.trim(),
+                address:     addressInput.value.trim(),
+                latitude:    lat,
+                longitude:   lon,
+                status:      statusInput.value
             };
 
             try {
-                const resUpdate = await fetch('http://localhost:8080/recipients/update', {
+                const resUpdate = await fetch('http://localhost:8080/recipients/10/update', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -216,18 +240,19 @@
                     },
                     body: JSON.stringify(bodyData)
                 });
-                if (!resUpdate.ok) {
-                    throw new Error(`Lỗi ${resUpdate.status}`);
-                }
+                if (!resUpdate.ok) throw new Error(resUpdate.status);
                 const updated = await resUpdate.json();
                 recipientData = updated;
 
                 staticFullName.textContent    = updated.fullName;
                 staticEmail.textContent       = updated.email;
                 staticPhoneNumber.textContent = updated.phoneNumber;
-                staticAddress.textContent     = updated.address ?? '';
+                staticAddress.textContent     = updated.address
+                    ?? (updated.latitude!=null && updated.longitude!=null
+                        ? `${updated.latitude}, ${updated.longitude}`
+                        : '');
                 staticStatus.textContent      = updated.status;
-                staticStatus.className        = updated.status === 'ACTIVE'
+                staticStatus.className        = updated.status==='ACTIVE'
                     ? 'badge bg-success' : 'badge bg-danger';
 
                 updateMsgEl.innerHTML = '<div class="alert alert-success">Cập nhật thành công.</div>';
@@ -237,7 +262,7 @@
                     updateMsgEl.innerHTML         = '';
                 }, 1000);
             } catch (err) {
-                console.error('Lỗi khi cập nhật recipient info:', err);
+                console.error('Lỗi khi cập nhật:', err);
                 updateMsgEl.innerHTML = `<div class="alert alert-danger">Cập nhật thất bại: ${err.message}</div>`;
             }
         });
